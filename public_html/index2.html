@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--
+#    AnalyTalks: A Wikimedia Tools Labs project for analysis and visualisation of inter-user conversations currently happening on the Wiki
+#    Copyright (C) <2014> <Debanjum>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wikimedia Tools Labs - analytalks</title>
+    <link rel="stylesheet" href="assets/css/foundation.css" />
+    <script src="assets/js/vendor/modernizr.js"></script>
+  </head>
+  <body>
+
+    <div class="row">
+
+      <div class="small-10 small-offset-1 large-8 large-offset-2 columns">
+
+        <h2>analytalks</h2>
+
+        <hr>
+
+        <p>
+        The analytalks project is a <a href="http://tools.wmflabs.org"> Wikimedia Tools Labs</a>
+	project for generating a real-time sentiment network of editor conversations for visual spam detection.
+        </p>
+        
+	<h3>process flow</h3>
+	<ol>
+	  <li> Extract recently updated user talk pages from the English Wikipedia's MySQL DB </li>
+	  <li> Run a sentiment classifier on the most recent page diff of above pages<br /> The sentiment classifier was trained on the rotten tomatoes movie review dataset</li>
+	  <li> Create a network of the user conversations and store in json format with metadata</li>
+	  <li> Visualise using a <a href="https://bl.ocks.org/mbostock/4062045">force-directed graph</a>  created with <a href="https://d3js.org">d3.js</a></li>
+	</ol>
+	  The code is written in Python. You can clone the source from <a href="http://tools-static.wmflabs.org/analytalks/analytalks.git">here</a>.
+	  Current attempts at creating a data visualisation can be seen <a href="https://tools.wmflabs.org/analytalks/graph.html">here</a>.
+	</p>
+	
+	<h3>what's next ?</h3>
+	<p>
+	  <ul>
+	    <li>Spam Detection
+		<ol>
+		  <li>convert visual spam detection to analytical spam detection(predict spamming users by anomaly detection? and tag them on the network)</li>
+		  <li>filter network to show only spamming users and their conversations based networks instead of the most recent 100 or whatever</li>
+		</ol>
+	    </li>
+	    <li>Community Detection
+	      <ol>
+		<li>community detection using louvain method</li>
+		<li>use community detection to categorise network communications(one group dedicated to one spammer or something)</li>
+	      </ol>
+	    </li>
+	  </ul>
+	</p>
+	<h3>contribute</h3>
+        <p>
+        If you would like to help out with the project please 
+        <a href="https://wikitech.wikimedia.org/wiki/Nova_Resource:Tools/Help#Getting_access_to_Tool_Labs">get access to Tools Labs</a>
+        and request to be a member of the analytalks project by getting in touch 
+        with <a href="mailto:debanjum@riseup.net">Deba</a>
+        </p>
+        <hr>
+
+      </div>
+
+    </div>
+
+    <script src="assets/js/vendor/jquery.js"></script>
+    <script src="assets/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>

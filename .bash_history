@@ -1,0 +1,280 @@
+#1510462170
+ls
+#1510462213
+git clone --recursive https://gerrit.wikimedia.org/r/pywikibot/core.git pywikibot-core
+#1510462421
+ls
+#1510462424
+cd pywikibot-core
+#1510462425
+ls
+#1510462432
+cd pywikibot
+#1510462433
+ls
+#1510462437
+cd ..
+#1510462438
+ls
+#1510462482
+cd
+#1510462489
+vim .description
+#1510462603
+webservice start
+#1510462700
+mkdir ~/bin
+#1510462707
+curl -sS https://getcomposer.org/installer | php -- --install-dir=$HOME/bin --filename=composer
+#1510462714
+ls
+#1510462724
+echo $PATH
+#1510462742
+. ~/.profile
+#1510462757
+logout
+#1510463025
+ls
+#1510463037
+logout
+#1510463062
+vim .description
+#1510463085
+webservice start
+#1510463201
+/public
+#1510463204
+cd /public
+#1510463207
+cd ..
+#1510463209
+ls
+#1510463231
+logout
+#1510463294
+ls
+#1510463608
+cd MW
+#1510463609
+ls
+#1510463612
+ls
+#1510463615
+cd ..
+#1510463625
+cd ..
+#1510463642
+cd ..
+#1510463644
+cd ..
+#1510463646
+cd ..
+#1510463646
+ls
+#1510463668
+cd public
+#1510463671
+ls
+#1510463676
+cd dumps
+#1510463677
+ls
+#1510463680
+cd ..
+#1510463682
+cd ..
+#1510463687
+cd home
+#1510463694
+ls
+#1510463711
+cd
+#1510463718
+logout
+#1510462789
+cd ~/public_html
+#1510462795
+mkdir public_html
+#1510462832
+git clone https://gerrit.wikimedia.org/r/p/mediawiki/core.git MW
+#1510464037
+ls
+#1510464087
+webservice start
+#1510464106
+mv .description public_html
+#1510464127
+cd public_html
+#1510464166
+vim .description
+#1510464195
+cd ..
+#1510464353
+cd public_html
+#1510464646
+vim index.html
+#1510464707
+webservice stop
+#1510464714
+webservice start
+#1510464759
+mv .description ../
+#1510464767
+vim .description
+#1510464773
+cd ..
+#1510464774
+ls
+#1510464778
+vim .description
+#1510464783
+ls
+#1510464798
+cd MW
+#1510464799
+ls
+#1510464982
+cd
+#1510464983
+ls
+#1510464987
+webservice stop
+#1510464995
+webservice start
+#1510465285
+cd ..
+#1510465289
+cd ..
+#1510465290
+cd ..
+#1510465293
+cd ..
+#1510465297
+cd
+#1510465297
+ls
+#1510465299
+cd ..
+#1510465300
+ls
+#1510465316
+cd fountain
+#1510465317
+ls
+#1510465321
+vim .description
+#1510465329
+cd ..
+#1510465343
+cd zoomviewer
+#1510465344
+ls
+#1510465348
+vim .description
+#1510465361
+cd ..
+#1510465366
+cd zimmerbot
+#1510465375
+cd /
+#1510465377
+ls
+#1510465385
+logout
+#1510465422
+ls
+#1510465428
+vim .description
+#1510465439
+webservice status
+#1510465445
+webservice stop
+#1510465449
+webservice status
+#1510465456
+webservice start
+#1510465758
+cd ..
+#1510465761
+ls
+#1510465766
+cd analytalks
+#1510465767
+ls
+#1510465832
+vim bigbrother.log
+#1510465854
+cd www
+#1510465855
+ls
+#1510465859
+cd static
+#1510465860
+ls
+#1510465865
+cd ../..
+#1510465869
+cd public_html
+#1510465870
+ls
+#1510465874
+cd scripts
+#1510465875
+ls
+#1510465880
+cd ..
+#1510465882
+ls
+#1510465886
+cd README
+#1510465891
+vim README
+#1510466027
+ls
+#1510466034
+cd graph.html
+#1510466040
+vim graph.html
+#1510466174
+cd ..
+#1510466174
+ls
+#1510466183
+cd nltk_data
+#1510466184
+ls
+#1510466187
+cd ..
+#1510466190
+cd
+#1510467716
+ls
+#1510467722
+cd public_html
+#1510467723
+ls
+#1510467730
+cd
+#1510467731
+cd MW
+#1510467733
+ls
+#1510467753
+composer install
+#1510468274
+ls
+#1510468292
+cd ..
+#1510468295
+ls
+#1510468299
+cd public_html
+#1510468299
+ls
+#1510468302
+cd ..
+#1510468309
+cd MW
+#1510468314
+git review -s
