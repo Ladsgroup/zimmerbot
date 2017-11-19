@@ -8,115 +8,143 @@
     </head>
     <body>
 
-        <div class="row">
+        <div class="grid-container">
 
-            <div class="small-10 small-centered large-8 large-centered columns">
+            <h2>ZimmerBot</h2>
+            <hr>
+            <p>
+            Welcome to the home page of ZimmerBot, a tool created by DiversaTech at Berkeley, Fall 2017!
+            </p>
+            <br>
 
-                <h2>ZimmerBot</h2>
+            <h3>Project Team Members</h3>
+            <hr>
+            <ul>
+                <li> Jihoon An </li>
+                <li> Sean Lee </li>
+                <li> Leon Ming </li>
+                <li> Jimmy Tsang </li>
+                <li> Neil Palleti </li>
+                <li> Celena Chang </li>
+                <li> Jade Yen </li>
+                <li> Cynthia Ha </li>
+                <li> Tiffany Pham </li>
+                <li> Hannah Kim </li>
+                <li> Vishnu Kumar </li>
+            </ul>
+            <br>
 
-                <hr>
+            <h3>Generate Links</h3>
+            <hr>
+            <form>
 
-                <p>
-                Welcome to the home page of ZimmerBot, a tool created by DiversaTech at Berkeley, Fall 2017!
-                </p>
+                <fieldset class="fieldset">
+                    <legend>Search</legend>
 
-                <h3>Team Members</h3>
-                <ul>
-                    <li> Jihoon An </li>
-                    <li> Sean Lee </li>
-                    <li> Leon Ming </li>
-                    <li> Jimmy Tsang </li>
-                    <li> Neil Palleti </li>
-                    <li> Celena Chang </li>
-                    <li> Jade Yen </li>
-                    <li> Cynthia Ha </li>
-                    <li> Tiffany Pham </li>
-                    <li> Hannah Kim </li>
-                    <li> Vishnu Kumar </li>
-                </ul>
-
-                <hr>
-
-                <form>
-
-                    <fieldset>
-                        <legend>Search</legend>
-
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label class="right inline">Search Query:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <input type="text" placeholder="Keyword or Category Name">
-                            </div>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="method" class="text-right middle">Search Method:</label>
                         </div>
-
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label class="right inline">Search Method:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <select>
-                                    <option value="individual">Individual Articles</option>
-                                    <option value="category">Categories</option>
-                                    <option value="related">Collections of Related Articles</option>
-                                    <option value="linked">Collections of Linked Articles</option>
-                                </select>
-                            </div>
+                        <div class="small-4 cell">
+                            <select id="method">
+                                <option value="individual">Individual Articles</option>
+                                <option value="category">Categories</option>
+                                <option value="related">Collections of Related Articles</option>
+                                <option value="linked">Collections of Linked Articles</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label for="filter-chooser" class="right inline">Filter By:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <select id="filter-chooser">
-                                    <option value="score">Article Score</option>
-                                    <option value="popularity">Popularity</option>
-                                    <option value="quality">Hot Dog</option>
-                                    <option value="most_linked">Most Linked To</option>
-                                </select>
-                            </div>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="query" class="text-right middle">Search Query:</label>
                         </div>
-
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label for="limit-chooser" class="right inline">Limit By:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <select id="limit-chooser">
-                                    <option value="none">None</option>
-                                    <option value="size">Size (in MB)</option>
-                                    <option value="number">Number of Articles</option>
-                                </select>
-                            </div>
+                        <div class="small-4 cell">
+                            <input type="text" id="query" placeholder="Keyword or Category Name">
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label for="limit" class="right inline">Limit:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <input type="text" id="limit" placeholder="Limit (in MB or #)">
-                            </div>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend>Filter & Limit</legend>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="filter-chooser" class="text-right middle">Filter By:</label>
                         </div>
-
-                        <div class="row">
-                            <div class="small-3 columns">
-                                <label for="media-type" class="right inline">Media Type:</label>
-                            </div>
-                            <div class="small-4 left columns">
-                                <select id="limit-chooser">
-                                    <option value="text_only">Text Only</option>
-                                    <option value="text_and_images">Text and Images Only</option>
-                                    <option value="all">Text and All Media</option>
-                                </select>
-                            </div>
+                        <div class="small-4 cell">
+                            <select id="filter-chooser">
+                                <option value="score">Article Score</option>
+                                <option value="popularity">Popularity</option>
+                                <option value="quality">Hot Dog</option>
+                                <option value="most_linked">Most Linked To</option>
+                            </select>
                         </div>
-                    </fieldset>
+                    </div>
 
-                </form>
-            </div>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="limit-chooser" class="text-right middle">Limit By:</label>
+                        </div>
+                        <div class="small-4 cell">
+                            <select id="limit-chooser">
+                                <option value="none">None</option>
+                                <option value="size">Size (in MB)</option>
+                                <option value="number">Number of Articles</option>
+                            </select>
+                        </div>
+                        <div class="small-1 cell">
+                            <label for="limit" class="text-right middle">Limit:</label>
+                        </div>
+                        <div class="small-4 cell">
+                            <input type="number" id="limit" placeholder="Limit (in MB or #)">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="fieldset">
+                    <legend>Additional Options</legend>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="media-type" class="text-right middle">Media Type:</label>
+                        </div>
+                        <div class="small-4 cell">
+                            <select id="limit-chooser">
+                                <option value="text_only">Text Only</option>
+                                <option value="text_and_images">Text and Images Only</option>
+                                <option value="all">Text and All Media</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-2 cell">
+                            <label for="media-type" class="text-right middle">Exclude Stubs:</label>
+                        </div>
+                        <div class="small-4 cell">
+                            <select id="limit-chooser">
+                                <option value="no_exclude">No</option>
+                                <option value="exclude">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="button">Submit</button>
+            </form>
+
+            <fieldset class="fieldset">
+                <legend>Search Results</legend>
+                <textarea placeholder="No links yet"></textarea>
+            </fieldset>
+
+                <button type="button" class="success button">Save Results to Collection</button>
+                <button type="button" class="alert button">Clear Results</button>
+
+            <fieldset class="fieldset">
+                <legend>Collection</legend>
+                <textarea placeholder="No links yet"></textarea>
+            </fieldset>
+
         </div>
 
 
