@@ -32,7 +32,7 @@ def get_page_view(article_name, language):
 	with urllib.request.urlopen(build_url(article_name, language)) as url:
 		data = json.loads(url.read().decode())
 		total_views = get_total_views(data)
-		print(total_views)
+		return total_views
 
 
 ##################
@@ -88,5 +88,5 @@ def get_total_views(data):
 #EXAMPLE / HOW TO USE#
 ######################
 
+#get_page_view("ARTICLE NAME", "LANGUAGE")
 get_page_view("Albert Einstein", "Icelandic")
-
