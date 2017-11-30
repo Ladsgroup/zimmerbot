@@ -4,6 +4,12 @@ import pywikibot
 import json, urllib
 import datetime
 
+# TLDR: The main function, get_ores_assessment, takes in a list of article names and
+# a language (English, Russian, or French). It then prints out each article's name,
+# along with an automatically generated (machine learning oooohh) assessment of that
+# article (Featured Article, Good Article, A-Class Article, B-Class Article, etc)
+# This serves as one possible criterion by which users can sort articles.
+
 # ORES Wiki: https://www.mediawiki.org/wiki/ORES
 # ORES Documentation: https://ores.wikimedia.org/v3/
 
