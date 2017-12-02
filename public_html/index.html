@@ -46,7 +46,11 @@
 
                     <div class="grid-x grid-padding-x">
                         <div class="small-4 cell">
-                            <label for="method" class="text-right middle">Method:</label>
+                            <label for="method" class="text-right middle">
+                                <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Sort search results based on a certin criterion">
+                                    Method:
+                                </span>
+                            </label>
                         </div>
                         <div class="small-6 cell">
                             <select id="method">
@@ -54,6 +58,19 @@
                                 <option value="category">Categories</option>
                                 <option value="related">Collections of Related Articles</option>
                                 <option value="linked">Collections of Linked Articles</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-4 cell">
+                            <label for="method" class="text-right middle">Language:</label>
+                        </div>
+                        <div class="small-6 cell">
+                            <select id="method">
+                                <option value="english">English</option>
+                                <option value="russian">Russian</option>
+                                <option value="french">French</option>
                             </select>
                         </div>
                     </div>
