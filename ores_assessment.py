@@ -103,3 +103,10 @@ get_ores_assessment(["Pear", "Grape", "Gandhi"], "English")
 # Performance notes:
 # After an article has been queried, it seems that it is cached automatically, so if it is queried again,
 # the process is much faster.
+
+
+do("2Chains", "English")
+
+site = pywikibot.getSite("en")
+page = pywikibot.Page(site, "2Chains")
+backlinks = site.pagebacklinks(page, followRedirects=True, filterRedirects=True, namespaces=None, total=num, content=False)

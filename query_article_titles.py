@@ -1,11 +1,9 @@
-import sys
-sys.path.append("C:/users/celena/pywikibot/core")
 import pywikibot
 import requests
 import json, urllib
 import re
 
-base_url = "w/api.php?action=query&format=json&list=search&srsearch="
+base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
 #url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
@@ -28,7 +26,7 @@ language_dict = generate_language_dict()
 
 #Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM
 #The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET
-#Example: 
+#Example:
 #	Input: "Swift", "English"
 #	Output:
 #		[
@@ -41,14 +39,14 @@ def query_articles(search_item, language):
 	result = []
 	for e in data["query"]["search"]:
 		#remove unwanted dictionary keys
-		e.pop("ns", None) 
+		e.pop("ns", None)
 		e.pop("size", None)
 		e.pop("timestamp", None)
 		result += [e]
 	return result
 
 #Returns a list of article names (strings) from querying for SEARCH_ITEM
-#Example: 
+#Example:
 #	Input: "Swift", "English"
 #	Output: ["Swift", "Taylor Swift", "Reputation"]
 def get_article_names_from_query(search_item, language):
@@ -59,7 +57,7 @@ def get_article_names_from_query(search_item, language):
 	return(result)
 
 #Returns the search replacement suggestion for the user's search
-#Example: 
+#Example:
 #	Input: "asdf Einstein!"
 #	Output: "asif Einstein"
 #	Input: "Albert Einstein"
@@ -85,7 +83,7 @@ def get_data(search_item, language):
 #Builds the json request URL
 def build_url(search_item, language):
 	language_code = language_dict[language]
-	site = pywikibot.getSite(language_code) 
+	site = pywikibot.getSite(language_code)
 	wiki_language_url = language_code + ".wikipedia.org/"
 
 	url_search_extension = re.sub("\s", "%", search_item.strip())
