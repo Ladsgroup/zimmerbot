@@ -43,7 +43,7 @@ def main():
 
 def print_results(sorted_articles, article_ratings):
     for i in range(len(sorted_articles)):
-        print(sorted_articles[i][0], ":", article_ratings[sorted_articles[i][0]])
+        print(sorted_articles[i][0], ":", sorted_articles[i][1].full_url())
 
 
 if __name__ == "__main__":
