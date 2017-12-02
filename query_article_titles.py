@@ -2,6 +2,7 @@ import pywikibot
 import requests
 import json, urllib
 import re
+import sys
 
 base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
 #url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
@@ -40,6 +41,12 @@ def query_articles(search_item, language_code):
         e.pop("size", None)
         e.pop("timestamp", None)
         result += [e]
+
+    if not result:
+        print("Please try another search query.")
+        if suggestion_exists(data):
+            print("Suggestion: " + get_search_suggestion(search_item, language_code))
+        sys.exit(0)
     return result
 
 #Returns a list of article names (strings) from querying for SEARCH_ITEM

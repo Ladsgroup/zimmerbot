@@ -9,7 +9,7 @@ import sys
 def main():
     # Process script arguments
     query = input("Search query: ")
-    language_code = language_dict[input("Language: ")]
+    language_code = language_dict[input("Language: ").capitalize()]
     filter_method = input("Filter Method: ")
     # For now, we only support limiting by number of articles, not total package size
     # limit_method = sys.argv[4]
@@ -36,6 +36,9 @@ def main():
     elif filter_method == "most_linked_to":
         for article in articles:
             article_ratings[article] = count_backlinks(article, language_code)
+    else:
+        print("Invalid filter method. Please choose popularity, most_linked_to, or ores_quality")
+        sys.exit(0)
 
     sorted_articles = sorted(articles.items(), key=lambda x: article_ratings[x[0]], reverse=True)
 
