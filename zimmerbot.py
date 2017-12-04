@@ -6,14 +6,16 @@ import sys
 
 # MAIN FUNCTION
 
-def main():
-    # Process script arguments
-    query = input("Search query: ")
-    language_code = language_dict[input("Language: ").capitalize()]
-    filter_method = input("Filter Method: ")
-    # For now, we only support limiting by number of articles, not total package size
-    # limit_method = sys.argv[4]
-    limit = min(int(input("Limit: ")), 500)
+def main(query, language, filter_method, limit):
+    # # Process script arguments
+    # query = input("Search query: ")
+    # language_code = language_dict[input("Language: ").capitalize()]
+    # filter_method = input("Filter Method: ")
+    # # For now, we only support limiting by number of articles, not total package size
+    # limit = min(int(input("Limit: ")), 500)
+    language_dict = generate_language_dict()
+    language_code = language_dict[language]
+    limit = min(int(limit), 500)
 
     # Get the query results
     article_dictionaries = query_articles(query, language_code)[:limit]
@@ -42,12 +44,13 @@ def main():
 
     sorted_articles = sorted(articles.items(), key=lambda x: article_ratings[x[0]], reverse=True)
 
-    print_results(sorted_articles, article_ratings)
+    return print_results(sorted_articles, article_ratings)
 
 def print_results(sorted_articles, article_ratings):
+    results = []
     for i in range(len(sorted_articles)):
-        print(sorted_articles[i][0], ":", sorted_articles[i][1].full_url())
-
+        results.append(sorted_articles[i][1].full_url())
+    return results
 
 if __name__ == "__main__":
     language_dict = generate_language_dict()
