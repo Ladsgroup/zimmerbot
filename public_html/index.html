@@ -24,165 +24,171 @@
 
             <h3>Generate Links</h3>
             <hr>
-            <form id="form">
+            <div class="grid-x grid-padding-x">
+                <!-- Search -->
+                <div class = "small-12 large-6 columns">
+                    <fieldset class="fieldset">
+                        <legend>Search</legend>
+
+                        <!--Search Method-->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="method" class="text-right middle">
+                                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Sort search results based on a certain criterion">
+                                        Method:
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <select id="method">
+                                    <option value="individual">Individual Articles</option>
+                                    <option value="category">*Coming Soon* Categories</option>
+                                    <option value="related">*Coming Soon* Collections of Related Articles</option>
+                                    <option value="linked">*Coming Soon* Collections of Linked Articles</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Language -->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="language" class="text-right middle">
+                                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Search by language">
+                                        Language:
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <select id="language">
+                                    <option value="english">English</option>
+                                    <option value="russian">Russian</option>
+                                    <option value="french">French</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Search Query (Keywords) -->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="query" class="text-right middle">
+                                    <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Place an input of your desired search terms">
+                                        Query:
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <input type="text" id="query" placeholder="Keywords"/>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+
+                <!-- Filter & Limit -->
+                <div class = "small-12 large-6 columns">
+                    <fieldset class="fieldset" style="height: 245;">
+                        <legend>Filter & Limit</legend>
+
+                        <!-- Filter Method -->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="filter" class="text-right middle">
+                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2"
+                                         title="Article Score - filters by Article Score.
+                                        Popularity - filters by popularity score.
+                                        Quality - filters by ORES assessment
+                                        Most Linked To - filters by most relevant urls
+                                        Exclude Stubs - filters out stub articles">
+                                            Filter By:
+                                        </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <select id="filter">
+                                    <!-- <option value="score">Article Score</option> -->
+                                    <option value="popularity">Popularity</option>
+                                    <option value="ores_quality">Quality</option>
+                                    <option value="most_linked_to">Most Linked To</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Limit Method -->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="limit_method" class="text-right middle">
+                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Filter by megabytes or number of articles">
+                                            Limit By:
+                                        </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <select id="limit-chooser">
+                                    <option value="number">Number of Articles</option>
+                                    <option value="size">Size (in MB)</option>
+                                    <option value="none">None</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Limit -->
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-4 cell">
+                                <label for="limit" class="text-right middle">
+                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Specify number of megabytes or articles to limit by">
+                                            Limit:
+                                        </span>
+                                </label>
+                            </div>
+                            <div class="small-6 cell">
+                                <input type="number" id="limit" placeholder="MB or #"/>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </div>
+            </div>
+
+            <!-- Additional Options -->
+            <fieldset class="fieldset">
+                <legend>Additional Options</legend>
 
                 <div class="grid-x grid-padding-x">
-                    <div class = "small-12 large-6 columns">
-                        <fieldset class="fieldset">
-                            <legend>Search</legend>
-
-                            <!--Search Method-->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="method" class="text-right middle">
-                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Sort search results based on a certain criterion">
-                                            Method:
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <select id="method">
-                                        <option value="individual">Individual Articles</option>
-                                        <option value="category">*Coming Soon* Categories</option>
-                                        <option value="related">*Coming Soon* Collections of Related Articles</option>
-                                        <option value="linked">*Coming Soon* Collections of Linked Articles</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Language -->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="language" class="text-right middle">
-                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Search by language">
-                                            Language:
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <select id="language">
-                                        <option value="english">English</option>
-                                        <option value="russian">Russian</option>
-                                        <option value="french">French</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Search Query (Keywords) -->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="query" class="text-right middle">
-                                        <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Place an input of your desired search terms">
-                                            Query:
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <input type="text" id="query" placeholder="Keyword or Category Name"/>
-                                </div>
-                            </div>
-                        </fieldset>
+                    <!-- Media Options -->
+                    <div class="small-4 large-2 cell">
+                        <label for="media-type" class="text-right middle">Media:</label>
+                    </div>
+                    <div class="small-8 large-3 cell">
+                        <select id="media">
+                            <option value="text_only">Text Only</option>
+                            <option value="text_and_images">Text and Images Only</option>
+                            <option value="all">Text and All Media</option>
+                        </select>
                     </div>
 
-                    <div class = "small-12 large-6 columns">
-                        <fieldset class="fieldset" style="height: 245;">
-                            <legend>Filter & Limit</legend>
-
-                            <!-- Filter Method -->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="filter" class="text-right middle">
-                                            <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2"
-                                             title="Article Score - filters by Article Score.
-                                            Popularity - filters by popularity score.
-                                            Quality - filters by ORES assessment
-                                            Most Linked To - filters by most relevant urls
-                                            Exclude Stubs - filters out stub articles">
-                                                Filter By:
-                                            </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <select id="filter">
-                                        <!-- <option value="score">Article Score</option> -->
-                                        <option value="popularity">Popularity</option>
-                                        <option value="ores_quality">Quality</option>
-                                        <option value="most_linked_to">Most Linked To</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Limit Method -->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="limit_method" class="text-right middle">
-                                            <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Filter by megabytes or number of articles">
-                                                Limit By:
-                                            </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <select id="limit-chooser">
-                                        <option value="number">Number of Articles</option>
-                                        <option value="size">Size (in MB)</option>
-                                        <option value="none">None</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Limit -->
-                            <div class="grid-x grid-padding-x">
-                                <div class="small-4 cell">
-                                    <label for="limit" class="text-right middle">
-                                            <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Specify number of megabytes or articles to limit by">
-                                                Limit:
-                                            </span>
-                                    </label>
-                                </div>
-                                <div class="small-6 cell">
-                                    <input type="number" id="limit" placeholder="Limit (in MB or #)"/>
-                                </div>
-                            </div>
-                        </fieldset>
+                    <!-- Stubs -->
+                    <div class="small-4 large-3 cell">
+                        <label for="media-type" class="text-right middle">Stubs:</label>
+                    </div>
+                    <div class="small-8 large-3 cell">
+                        <select id="stub">
+                            <option value="include">Include</option>
+                            <option value="exclude">Exclude</option>
+                        </select>
                     </div>
                 </div>
 
-                <fieldset class="fieldset">
-                    <legend>Additional Options</legend>
+            </fieldset>
 
-                    <div class="grid-x grid-padding-x">
-                        <div class="small-4 large-2 cell">
-                            <label for="media-type" class="text-right middle">Media:</label>
-                        </div>
-                        <div class="small-8 large-3 cell">
-                            <select id="media">
-                                <option value="text_only">Text Only</option>
-                                <option value="text_and_images">Text and Images Only</option>
-                                <option value="all">Text and All Media</option>
-                            </select>
-                        </div>
-                        <div class="small-4 large-3 cell">
-                            <label for="media-type" class="text-right middle">Stubs:</label>
-                        </div>
-                        <div class="small-8 large-3 cell">
-                            <select id="stub">
-                                <option value="include">Include</option>
-                                <option value="exclude">Exclude</option>
-                            </select>
-                        </div>
-                    </div>
-                </fieldset>
-
-                <!-- Submit Button -->
-                <div class="grid-x grid-padding-x">
-                    <div class="small-4 small-offset-4 cell">
-                        <button type="button" id="submit" class="button expanded">Submit</button>
-                    </div>
+            <!-- Submit Button -->
+            <div class="grid-x grid-padding-x">
+                <div class="small-12 large-2 large-offset-5 cell">
+                    <button type="button" id="submit" class="button expanded">Submit</button>
                 </div>
-            </form>
+            </div>
 
             <!-- Message -->
-            <p id="please-wait" align="center"></p>
+            <p id="message" align="center"></p>
 
             <!-- Search Results -->
             <fieldset class="fieldset">
@@ -226,7 +232,7 @@
         </script>
         <script>
             $("#submit").click(function() {
-                $("#please-wait").html("Please wait, this may take a while...");
+                $("#message").html("Please wait, this may take a while...");
                 var xhr = new XMLHttpRequest();
                 var url = "https://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
                 xhr.open("POST", url, true);
@@ -236,9 +242,9 @@
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
                         $("#results").html(json.join("\n"));
-                        $("#please-wait").html("");
+                        $("#message").html("");
                     } else {
-                        $("#please-wait").html("Something went wrong, please try something else");
+                        $("#message").html("Something went wrong, please try something else");
                     }
                 };
                 var request = JSON.stringify(
