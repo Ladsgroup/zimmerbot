@@ -1,9 +1,9 @@
-from flask import Flask, request, url_for, make_response, jsonify
+from flask import request, url_for, make_response, jsonify
 from flask_api import FlaskAPI, status, exceptions
 from flask_cors import CORS
 from zimmerbot import *
 
-application = Flask(__name__)
+application = FlaskAPI(__name__)
 CORS(application)
 
 @application.route("/", methods=["GET", "POST"])
@@ -14,7 +14,7 @@ def get_links():
         print(request)
         data = request.data
         list_of_links = main(data["query"], data["language"], data["filter"], data["limit"])
-    return jsonify(list_of_links)
+    return list_of_links
 
 
 # run the app.
