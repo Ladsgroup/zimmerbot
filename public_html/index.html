@@ -52,14 +52,14 @@
                             <!-- Language -->
                             <div class="grid-x grid-padding-x">
                                 <div class="small-4 cell">
-                                    <label for="method" class="text-right middle">
+                                    <label for="language" class="text-right middle">
                                         <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Search by language">
                                             Language:
                                         </span>
                                     </label>
                                 </div>
                                 <div class="small-6 cell">
-                                    <select id="method">
+                                    <select id="language">
                                         <option value="english">English</option>
                                         <option value="russian">Russian</option>
                                         <option value="french">French</option>
@@ -242,7 +242,7 @@
                 var xhr = new XMLHttpRequest();
                 var url = "http://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
                 xhr.open("POST", url, true);
-                // xhr.setRequestHeader("Content-type", "application/json");
+                xhr.setRequestHeader("Content-type", "application/json");
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var json = JSON.parse(xhr.responseText);
