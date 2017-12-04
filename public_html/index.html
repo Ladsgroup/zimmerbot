@@ -42,9 +42,9 @@
                                 <div class="small-6 cell">
                                     <select id="method">
                                         <option value="individual">Individual Articles</option>
-                                        <option value="category">Categories</option>
-                                        <option value="related">Collections of Related Articles</option>
-                                        <option value="linked">Collections of Linked Articles</option>
+                                        <option value="category">*Coming Soon* Categories</option>
+                                        <option value="related">*Coming Soon* Collections of Related Articles</option>
+                                        <option value="linked">*Coming Soon* Collections of Linked Articles</option>
                                     </select>
                                 </div>
                             </div>
@@ -259,6 +259,8 @@
                 );
                 console.log(request);
                 xhr.send(request);
+                response = xhr.responseText;
+                console.log(JSON.parse(response));
             });
         </script>
     </body>
