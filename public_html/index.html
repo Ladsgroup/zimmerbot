@@ -2,6 +2,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
         <title>Wikimedia Tools Labs - ZimmerBot</title>
         <link rel="stylesheet" href="assets/css/foundation.css" />
         <script src="assets/js/vendor/modernizr.js"></script>
@@ -240,7 +241,7 @@
                 // request = JSON.stringify(request);
 
                 var xhr = new XMLHttpRequest();
-                var url = "http://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
+                var url = "https://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
                 xhr.open("POST", url, true);
                 xhr.setRequestHeader("Content-type", "application/json");
                 xhr.onreadystatechange = function () {
@@ -259,8 +260,6 @@
                 );
                 console.log(request);
                 xhr.send(request);
-                response = xhr.responseText;
-                console.log(JSON.parse(response));
             });
         </script>
     </body>
