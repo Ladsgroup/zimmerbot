@@ -27,7 +27,7 @@ def count_backlinks(article_name, language_code):
 ### article that appears in the generated set of articles)
 def getlinks(site, pageName):
     page = pywikibot.Page(site, pageName)
-    return site.pagebacklinks(page, followRedirects=False, filterRedirects=False)
+    return site.pagebacklinks(page, followRedirects=False, filterRedirects=True)
 
 
 if __name__ == "__main__":
