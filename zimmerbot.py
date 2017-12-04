@@ -14,7 +14,7 @@ def main(query, language, filter_method, limit):
     # # For now, we only support limiting by number of articles, not total package size
     # limit = min(int(input("Limit: ")), 500)
     language_dict = generate_language_dict()
-    language_code = language_dict[language]
+    language_code = language_dict[language.capitalize()]
     limit = min(int(limit), 500)
 
     # Get the query results

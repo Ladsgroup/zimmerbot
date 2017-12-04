@@ -8,13 +8,13 @@ CORS(application)
 
 @application.route("/", methods=["GET", "POST"])
 def get_links():
-
     results = {}
     if request.method == "GET":
         list_of_links = main("dog", "English", "popularity", "10")
     else:
+        print(request)
         data = request.data
-        list_of_links = main(data.query, data.language, data.filter, data.limit)
+        list_of_links = main(data["query"], data["language"], data["filter"], data["limit"])
     for i in range(len(list_of_links)):
         results[i] = list_of_links[i]
 
