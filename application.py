@@ -7,8 +7,9 @@ application = FlaskAPI(__name__)
 @application.route("/")
 def get_links():
     results = {}
-    # data = request.data
-    list_of_links = main("dog", "English", "popularity", "10")
+    data = request.data
+    print(data)
+    list_of_links = main(data.query, data.language, data.filter, data.limit)
     for i in range(len(list_of_links)):
         results[i] = list_of_links[i]
     return [results]

@@ -23,7 +23,7 @@
 
             <h3>Generate Links</h3>
             <hr>
-            <form>
+            <form id="form">
 
                 <div class="grid-x grid-padding-x">
                     <div class = "large-6 columns">
@@ -77,7 +77,7 @@
                                     </label>
                                 </div>
                                 <div class="small-6 cell">
-                                    <input type="text" id="query" placeholder="Keyword or Category Name">
+                                    <input type="text" id="query" placeholder="Keyword or Category Name"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -90,7 +90,7 @@
                             <!-- Filter Method -->
                             <div class="grid-x grid-padding-x">
                                 <div class="small-4 cell">
-                                    <label for="filter-chooser" class="text-right middle">
+                                    <label for="filter" class="text-right middle">
                                             <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2"
                                              title="Article Score - filters by Article Score.
                                             Popularity - filters by popularity score.
@@ -102,11 +102,11 @@
                                     </label>
                                 </div>
                                 <div class="small-6 cell">
-                                    <select id="filter-chooser">
-                                        <option value="score">Article Score</option>
+                                    <select id="filter">
+                                        <!-- <option value="score">Article Score</option> -->
                                         <option value="popularity">Popularity</option>
-                                        <option value="quality">Quality</option>
-                                        <option value="most_linked">Most Linked To</option>
+                                        <option value="ores_quality">Quality</option>
+                                        <option value="most_linked_to">Most Linked To</option>
                                     </select>
                                 </div>
                             </div>
@@ -114,7 +114,7 @@
                             <!-- Limit Method -->
                             <div class="grid-x grid-padding-x">
                                 <div class="small-4 cell">
-                                    <label for="limit-chooser" class="text-right middle">
+                                    <label for="limit_method" class="text-right middle">
                                             <span data-tooltip aria-haspopup="true" class="has-tip top" data-click-open="false" data-disable-hover="false" tabindex="2" title="Filter by megabytes or number of articles">
                                                 Limit By:
                                             </span>
@@ -139,7 +139,7 @@
                                     </label>
                                 </div>
                                 <div class="small-6 cell">
-                                    <input type="number" id="limit" placeholder="Limit (in MB or #)">
+                                    <input type="number" id="limit" placeholder="Limit (in MB or #)"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -154,7 +154,7 @@
                             <label for="media-type" class="text-right middle">Media:</label>
                         </div>
                         <div class="small-4 cell">
-                            <select id="limit-chooser">
+                            <select id="media">
                                 <option value="text_only">Text Only</option>
                                 <option value="text_and_images">Text and Images Only</option>
                                 <option value="all">Text and All Media</option>
@@ -164,16 +164,18 @@
                             <label for="media-type" class="text-right middle">Stubs:</label>
                         </div>
                         <div class="small-4 cell">
-                            <select id="limit-chooser">
+                            <select id="stub">
                                 <option value="include">Include</option>
                                 <option value="exclude">Exclude</option>
                             </select>
                         </div>
                     </div>
                 </fieldset>
+
+                <!-- Submit Button -->
                 <div class="grid-x grid-padding-x">
                     <div class="small-2 small-offset-5 cell">
-                        <button type="submit" class="button expanded">Submit</button>
+                        <button type="button" id="submit" class="button expanded">Submit</button>
                     </div>
                 </div>
             </form>
@@ -223,11 +225,41 @@
             <br>
         </div>
 
-
         <script src="assets/js/vendor/jquery.js"></script>
         <script src="assets/js/foundation.min.js"></script>
         <script>
             $(document).foundation();
+        </script>
+        <script>
+            $("#submit").click(function() {
+                // var request = {};
+                // $.each($("#form").serializeArray(), function() {
+                //     request[this.name] = this.value;
+                // });
+                // console.log(request);
+                // request = JSON.stringify(request);
+
+                var xhr = new XMLHttpRequest();
+                var url = "http://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
+                xhr.open("POST", url, true);
+                // xhr.setRequestHeader("Content-type", "application/json");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var json = JSON.parse(xhr.responseText);
+                        console.log(json);
+                    }
+                };
+                var request = JSON.stringify(
+                    {
+                        "query" : $("#query").val(),
+                        "language" : $("#language").val(),
+                        "filter" : $("#filter").val(),
+                        "limit" : $("#limit").val()
+                    }
+                );
+                console.log(request);
+                xhr.send(request);
+            });
         </script>
     </body>
 </html>
