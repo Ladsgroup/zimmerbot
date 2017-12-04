@@ -27,7 +27,7 @@
             <form id="form">
 
                 <div class="grid-x grid-padding-x">
-                    <div class = "large-6 columns">
+                    <div class = "small-6 columns">
                         <fieldset class="fieldset">
                             <legend>Search</legend>
 
@@ -84,7 +84,7 @@
                         </fieldset>
                     </div>
 
-                    <div class = "large-6 columns">
+                    <div class = "small-6 columns">
                         <fieldset class="fieldset" style="height: 245;">
                             <legend>Filter & Limit</legend>
 
@@ -151,20 +151,20 @@
                     <legend>Additional Options</legend>
 
                     <div class="grid-x grid-padding-x">
-                        <div class="small-1 cell">
+                        <div class="small-4 large-2 cell">
                             <label for="media-type" class="text-right middle">Media:</label>
                         </div>
-                        <div class="small-4 cell">
+                        <div class="small-8 large-3 cell">
                             <select id="media">
                                 <option value="text_only">Text Only</option>
                                 <option value="text_and_images">Text and Images Only</option>
                                 <option value="all">Text and All Media</option>
                             </select>
                         </div>
-                        <div class="small-2 cell">
+                        <div class="small-4 large-3 cell">
                             <label for="media-type" class="text-right middle">Stubs:</label>
                         </div>
-                        <div class="small-4 cell">
+                        <div class="small-8 large-3 cell">
                             <select id="stub">
                                 <option value="include">Include</option>
                                 <option value="exclude">Exclude</option>
@@ -175,11 +175,13 @@
 
                 <!-- Submit Button -->
                 <div class="grid-x grid-padding-x">
-                    <div class="small-2 small-offset-5 cell">
+                    <div class="small-4 small-offset-4 cell">
                         <button type="button" id="submit" class="button expanded">Submit</button>
                     </div>
                 </div>
             </form>
+
+            <p id="please-wait" align="center"></p>
 
             <fieldset class="fieldset">
                 <legend>Search Results</legend>
@@ -233,7 +235,7 @@
         </script>
         <script>
             $("#submit").click(function() {
-
+                $("#please-wait").html("Please wait, this may take a while...");
                 var xhr = new XMLHttpRequest();
                 var url = "https://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
                 xhr.open("POST", url, true);
@@ -243,6 +245,9 @@
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
                         $("#results").html(json.join("\n"));
+                        $("#please-wait").html("");
+                    } else {
+                        $("#please-wait").html("Something went wrong, please try something else");
                     }
                 };
                 var request = JSON.stringify(
