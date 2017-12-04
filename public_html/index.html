@@ -27,7 +27,7 @@
             <form id="form">
 
                 <div class="grid-x grid-padding-x">
-                    <div class = "small-6 columns">
+                    <div class = "small-12 large-6 columns">
                         <fieldset class="fieldset">
                             <legend>Search</legend>
 
@@ -84,7 +84,7 @@
                         </fieldset>
                     </div>
 
-                    <div class = "small-6 columns">
+                    <div class = "small-12 large-6 columns">
                         <fieldset class="fieldset" style="height: 245;">
                             <legend>Filter & Limit</legend>
 
@@ -181,15 +181,18 @@
                 </div>
             </form>
 
+            <!-- Message -->
             <p id="please-wait" align="center"></p>
 
+            <!-- Search Results -->
             <fieldset class="fieldset">
                 <legend>Search Results</legend>
                 <textarea id="results" placeholder="No links yet" rows="3"></textarea>
             </fieldset>
 
+            <!-- Result Handling Buttons -->
             <div class="grid-x grid-padding-x">
-                <div class="small-6 small-offset-3 cell">
+                <div class="small-12 large-6 large-offset-3 cell">
                     <div class="stacked-for-small button-group">
                         <button id="download" type="button" class="success button">Download Link Collection</button>
                         <button id="clear" type="button" class="alert button">Clear Results</button>
