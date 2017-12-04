@@ -123,9 +123,9 @@
                                 </div>
                                 <div class="small-6 cell">
                                     <select id="limit-chooser">
-                                        <option value="none">None</option>
-                                        <option value="size">Size (in MB)</option>
                                         <option value="number">Number of Articles</option>
+                                        <option value="size">Size (in MB)</option>
+                                        <option value="none">None</option>
                                     </select>
                                 </div>
                             </div>
@@ -183,14 +183,14 @@
 
             <fieldset class="fieldset">
                 <legend>Search Results</legend>
-                <textarea placeholder="No links yet"></textarea>
+                <textarea id="results" placeholder="No links yet" rows="3"></textarea>
             </fieldset>
 
             <div class="grid-x grid-padding-x">
                 <div class="small-6 small-offset-3 cell">
                     <div class="stacked-for-small button-group">
-                        <button type="button" class="success button">Download Link Collection</button>
-                        <button type="button" class="alert button">Clear Results</button>
+                        <button id="download" type="button" class="success button">Download Link Collection</button>
+                        <button id="clear" type="button" class="alert button">Clear Results</button>
                     </div>
                 </div>
             </div>
@@ -233,12 +233,6 @@
         </script>
         <script>
             $("#submit").click(function() {
-                // var request = {};
-                // $.each($("#form").serializeArray(), function() {
-                //     request[this.name] = this.value;
-                // });
-                // console.log(request);
-                // request = JSON.stringify(request);
 
                 var xhr = new XMLHttpRequest();
                 var url = "https://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
@@ -248,6 +242,7 @@
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
+                        $("#results").html(json.join("\n"));
                     }
                 };
                 var request = JSON.stringify(
@@ -260,6 +255,15 @@
                 );
                 console.log(request);
                 xhr.send(request);
+            });
+
+            $("#download").click(function(){
+                $("#results").select();
+                document.execCommand('copy');
+            });
+
+            $("#clear").click(function(){
+                $("#results").val("");
             });
         </script>
     </body>
