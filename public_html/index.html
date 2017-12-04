@@ -2,7 +2,6 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <title>Wikimedia Tools Labs - ZimmerBot</title>
         <link rel="stylesheet" href="assets/css/foundation.css" />
         <script src="assets/js/vendor/modernizr.js"></script>
@@ -234,17 +233,17 @@
             $("#submit").click(function() {
                 $("#message").html("Please wait, this may take a while...");
                 var xhr = new XMLHttpRequest();
-                var url = "https://zimmerbot-env.u27bjsbm6e.us-west-2.elasticbeanstalk.com/";
+                var url = "https://zimmerbot.host";
                 xhr.open("POST", url, true);
                 xhr.setRequestHeader("Content-type", "application/json");
                 xhr.onreadystatechange = function () {
-                    console.log(xhr.status);
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
                         $("#results").html(json.join("\n"));
                         $("#message").html("");
                     } else {
+                        console.log(xhr.status);
                         $("#message").html("Something went wrong, please try something else");
                     }
                 };
@@ -257,6 +256,7 @@
                     }
                 );
                 console.log(request);
+                console.log(xhr.readyState);
                 xhr.send(request);
             });
 

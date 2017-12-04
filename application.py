@@ -11,7 +11,7 @@ def get_links():
     if request.method == "GET":
         list_of_links = main("dog", "English", "popularity", "10")
     else:
-        print(request)
+        print(request.data)
         data = request.data
         list_of_links = main(data["query"], data["language"], data["filter"], data["limit"])
     return list_of_links
