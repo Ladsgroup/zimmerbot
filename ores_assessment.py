@@ -100,10 +100,10 @@ def scale_article_assessments(article_rating_results):
         "GA" : 4,
         "B" : 3,
         "C" : 2,
-        "Start" : 1,
-        "Stub" : 0,
+        "START" : 1,
+        "STUB" : 0,
 
-        "AdQ" : 6,
+        "ADQ" : 6,
         "BA" : 5,
         "A" : 4,
         "B" : 3,
@@ -120,7 +120,7 @@ def scale_article_assessments(article_rating_results):
 
     }
     for name in article_rating_results:
-        letter_grade = article_rating_results[name]
+        letter_grade = article_rating_results[name].upper()
         article_rating_results[name] = article_rating_rules[letter_grade]
     return article_rating_results
 

@@ -31,7 +31,7 @@ def main(query, language, filter_method, limit, stub):
             article_names = [name for name in article_names if name in scaled_ores_rating_results]
     if filter_method == "ores_quality":
         for i in range(len(article_names)):
-            article_ratings[article_names[i]] = scaled_article_rating_results[i]
+            article_ratings[article_names[i]] = scaled_ores_rating_results[i]
     elif filter_method == "popularity":
         for article in articles:
             article_ratings[article] = get_page_view(article, language_code)
