@@ -553,7 +553,7 @@
                     if (xhr.readyState === 4 && xhr.status === 200) {
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
-                        $("#results").html(json.join("\n"));
+                        $("#results").val(json.join("\n"));
                         $("#message").html("");
                     } else {
                         console.log(xhr.status);
@@ -565,7 +565,8 @@
                         "query" : $("#query").val(),
                         "language" : $("#language").val(),
                         "filter" : $("#filter").val(),
-                        "limit" : $("#limit").val()
+                        "limit" : $("#limit").val(),
+                        "stub" : $("#stub").val()
                     }
                 );
                 console.log(request);

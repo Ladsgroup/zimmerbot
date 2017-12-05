@@ -97,9 +97,7 @@ def get_article_assessments(data):
 def scale_article_assessments(article_rating_results):
     article_rating_rules = {
         "FA" : 5,
-        "FL" : 5,
         "GA" : 4,
-        "A" : 4,
         "B" : 3,
         "C" : 2,
         "Start" : 1,
@@ -133,7 +131,7 @@ def scale_article_assessments(article_rating_results):
 if __name__ == "__main__":
     language_dict = generate_language_dict()
 
-    get_ores_assessment(["Mediterranean", "Rhode Island", "Car"], language_dict["Russian"])
+    get_ores_assessment(["List of tallest buildings in Las Vegas", "Rhode Island", "Car"], language_dict["English"])
 
 # Performance notes:
 # After an article has been queried, it seems that it is cached automatically, so if it is queried again,
