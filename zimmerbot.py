@@ -43,7 +43,6 @@ def main(query, language, filter_method, limit, stub):
         sys.exit(0)
 
     sorted_articles = sorted(articles.items(), key=lambda x: article_ratings[x[0]], reverse=True)
-
     return process_results(sorted_articles[:limit])
 
 def process_results(sorted_articles):
