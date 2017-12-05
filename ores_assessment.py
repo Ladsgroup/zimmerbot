@@ -119,9 +119,9 @@ def scale_article_assessments(article_rating_results):
         "I" : 1
 
     }
-    for i in range(len(article_rating_results)):
-        letter_grade = article_rating_results[i]
-        article_rating_results[i] = article_rating_rules[letter_grade]
+    for name in article_rating_results:
+        letter_grade = article_rating_results[name]
+        article_rating_results[name] = article_rating_rules[letter_grade]
     return article_rating_results
 
 ######################
