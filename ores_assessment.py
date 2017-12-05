@@ -55,10 +55,12 @@ def get_ores_assessment(article_names, language_code):
         with urllib.request.urlopen(built_url) as url:
             data = json.loads(url.read().decode())
             all_assessments = get_article_assessments(data)
+            ores_rating_results = {}
             for i in range(len(article_names)):
                 print("Article Name: " + article_names[i])
                 print("ORES Assessment: " + all_assessments[rev_ids[i]])
-            return all_assessments
+                ores_rating_results[article_names[i]] = all_assessments[rev_ids[i]]
+            return ores_rating_results
 
 ##################
 #HELPER FUNCTIONS#

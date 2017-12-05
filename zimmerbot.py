@@ -17,10 +17,6 @@ def main(query, language, filter_method, limit, stub):
     article_dictionaries = query_articles(query, language_code)[:limit+20]
     # List of article titles
     article_names = get_article_names_from_query(article_dictionaries)
-    # Dictionary of page objects with article names as keys
-    articles = get_articles_from_names(article_names, language_code) # {"title: page_object"}
-    # Initialize empty dictionary of article ratings hashed by article name/title
-    article_ratings = {} # {"title: numerical_article_score"}
 
     if filter_method == "ores_quality" or stub == "exclude":
         ores_rating_results = get_ores_assessment(article_names, language_code)
@@ -29,9 +25,14 @@ def main(query, language, filter_method, limit, stub):
         if stub == "exclude":
             scaled_ores_rating_results = {name : score for name, score in scaled_ores_rating_results.items() if score != 0}
             article_names = [name for name in article_names if name in scaled_ores_rating_results]
+
+    # Dictionary of page objects with article names as keys
+    articles = get_articles_from_names(article_names, language_code) # {"title: page_object"}
+    # Initialize empty dictionary of article ratings hashed by article name/title
+    article_ratings = {} # {"title: numerical_article_score"}
+
     if filter_method == "ores_quality":
-        for i in range(len(article_names)):
-            article_ratings[article_names[i]] = scaled_ores_rating_results[i]
+            article_ratings = scaled_ores_rating_results
     elif filter_method == "popularity":
         for article in articles:
             article_ratings[article] = get_page_view(article, language_code)
