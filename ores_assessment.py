@@ -51,12 +51,13 @@ def get_ores_assessment(article_names, language_code):
         print("Sorry, automatic ORES article quality assessment is not available in " + language_code)
         sys.exit(0)
     else:
-        with urllib.request.urlopen(build_ores_url(article_names, language_code)) as url:
+        built_url, rev_ids, = build_ores_url(article_names, language_code)
+        with urllib.request.urlopen(built_url) as url:
             data = json.loads(url.read().decode())
             all_assessments = get_article_assessments(data)
             for i in range(len(article_names)):
                 print("Article Name: " + article_names[i])
-                print("ORES Assessment: " + all_assessments[i])
+                print("ORES Assessment: " + all_assessments[rev_ids[i]])
             return all_assessments
 
 ##################
@@ -77,20 +78,20 @@ def build_ores_url(article_names, language_code):
 
     result = url + context + "/?models=wp10&revids=" + "|".join(rev_ids)
 
-    return result
+    return result, rev_ids
 
 
 # Returns the ORES automatic article assessment (see following link for table of assessments:
 # https://www.mediawiki.org/wiki/ORES#/media/File:Article_quality_and_importance.wp10bot.enwiki.png)
 def get_article_assessments(data):
     print(data)
-    scores = []
+    scores = {}
     # first index 0 is the wiki (enwiki, ruwiki, or frwiki)
     # second index 0 is the rev_id
     scores_json = list(data.values())[0]["scores"]
     for article in scores_json:
         score = scores_json[article]["wp10"]["score"]
-        scores.append(score["prediction"])
+        scores[article] = score["prediction"]
     return scores
 
 def scale_article_assessments(article_rating_results):
@@ -111,6 +112,13 @@ def scale_article_assessments(article_rating_results):
         "BD" : 2,
         "E" : 1,
 
+        "ХС" : 7,
+        "ИС" : 6,
+        "ДС" : 5,
+        "IV" : 4,
+        "III" : 3,
+        "II" : 2,
+        "I" : 1
 
     }
     for i in range(len(article_rating_results)):
@@ -125,7 +133,7 @@ def scale_article_assessments(article_rating_results):
 if __name__ == "__main__":
     language_dict = generate_language_dict()
 
-    get_ores_assessment(["Pear", "Grape", "Gandhi"], language_dict["English"])
+    get_ores_assessment(["Mediterranean", "Rhode Island", "Car"], language_dict["Russian"])
 
 # Performance notes:
 # After an article has been queried, it seems that it is cached automatically, so if it is queried again,
