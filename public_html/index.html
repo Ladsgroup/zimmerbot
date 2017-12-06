@@ -555,12 +555,13 @@
                 xhr.open("POST", url, true);
                 xhr.setRequestHeader("Content-type", "application/json");
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
+                    console.log(xhr.statusText);
+                    if (xhr.readyState === 4 && xhr.statusText === 'OK') {
                         var json = JSON.parse(xhr.responseText);
                         console.log(json);
                         $("#results").val(json.join("\n"));
                         $("#message").html("");
-                    } else if (xhr.readyState === 4 && xhr.status === 204) {
+                    } else if (xhr.readyState === 4 && xhr.status === 'NO CONTENT') {
                         var json = JSON.parse(xhr.responseText);
                         $("#message").html(json[0]);
                     } else {
