@@ -44,20 +44,18 @@ ORES_SUPPORTED_WIKIS = {"en": "enwiki",
 
 # Returns the ORES automatic article quality assessment for the given article_name and language_code
 def get_ores_assessment(article_names, language_code):
-    if language_code not in ORES_SUPPORTED_WIKIS:
-        print("Sorry, automatic ORES article quality assessment is not available in " + language_code)
-        sys.exit(0)
-    else:
-        built_url, rev_ids, = build_ores_url(article_names, language_code)
-        with urllib.request.urlopen(built_url) as url:
-            data = json.loads(url.read().decode())
-            all_assessments = get_article_assessments(data)
-            ores_rating_results = {}
-            for i in range(len(article_names)):
-                print("Article Name: " + article_names[i])
-                print("ORES Assessment: " + all_assessments[rev_ids[i]])
-                ores_rating_results[article_names[i]] = all_assessments[rev_ids[i]]
-            return ores_rating_results
+    assert language_code in ORES_SUPPORTED_WIKIS, "ORES not supported in " + language_code
+
+    built_url, rev_ids, = build_ores_url(article_names, language_code)
+    with urllib.request.urlopen(built_url) as url:
+        data = json.loads(url.read().decode())
+        all_assessments = get_article_assessments(data)
+        ores_rating_results = {}
+        for i in range(len(article_names)):
+            print("Article Name: " + article_names[i])
+            print("ORES Assessment: " + all_assessments[rev_ids[i]])
+            ores_rating_results[article_names[i]] = all_assessments[rev_ids[i]]
+        return ores_rating_results
 
 ##################
 #HELPER FUNCTIONS#
@@ -129,7 +127,7 @@ def scale_article_assessments(article_rating_results):
 
 if __name__ == "__main__":
 
-    get_ores_assessment(["List of tallest buildings in Las Vegas", "Rhode Island", "Car"], language_dict["English"])
+    get_ores_assessment(["List of tallest buildings in Las Vegas", "Rhode Island", "Car"], language_dict["Spanish"])
 
 # Performance notes:
 # After an article has been queried, it seems that it is cached automatically, so if it is queried again,

@@ -47,7 +47,6 @@ def query_articles(search_item, language_code):
         print("Please try another search query.")
         if suggestion_exists(data):
             print("Suggestion: " + get_search_suggestion(search_item, language_code))
-        sys.exit(0)
     return result
 
 #Returns a list of article names (strings) from querying for SEARCH_ITEM

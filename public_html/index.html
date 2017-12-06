@@ -560,6 +560,9 @@
                         console.log(json);
                         $("#results").val(json.join("\n"));
                         $("#message").html("");
+                    } else if (xhr.readyState === 4 && xhr.status === 204) {
+                        var json = JSON.parse(xhr.responseText);
+                        $("#message").html(json[0]);
                     } else {
                         console.log(xhr.status);
                         $("#message").html("Something went wrong, please try something else");

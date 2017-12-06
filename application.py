@@ -13,7 +13,11 @@ def get_links():
     else:
         print(request.data)
         data = request.data
+        if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
+            return ["ORES is not supported in this language"], status.HTTP_204_NO_CONTENT
         list_of_links = main(data["query"], data["language"], data["filter"], data["limit"], data["stub"])
+        if not list_of_links:
+            return ["No search results found for this query"], status.HTTP_204_NO_CONTENT
     return list_of_links
 
 
