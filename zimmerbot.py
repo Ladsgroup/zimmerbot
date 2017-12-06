@@ -6,10 +6,8 @@ import sys
 
 # MAIN FUNCTION
 
-def main(query, language, filter_method, limit, stub):
+def main(query, language_code, filter_method, limit, stub):
     # Process script arguments
-    language_dict = generate_language_dict()
-    language_code = language_dict[language.capitalize()]
     # For now, we only support limiting by number of articles, not total package size
     limit = min(int(limit), 500)
 
@@ -53,9 +51,8 @@ def process_results(sorted_articles):
     return results
 
 if __name__ == "__main__":
-    language_dict = generate_language_dict()
     query = input("Please enter your query: ")
-    language = input("Please enter a language: ")
+    language = language_dict[input("Please enter a language: ").capitalize()]
     filter_method = input("Please enter the filtering method: ")
     limit = input("Enter a limit no more than 500: ")
     stub = "include"

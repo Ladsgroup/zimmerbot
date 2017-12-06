@@ -3,20 +3,21 @@ import requests
 import json, urllib
 import datetime
 import re
+from language_dict import language_dict
 
 url = "http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
 #url_example = "/metrics/pageviews/per-article/en.wikipedia/all-access/all-agents/Albert_Einstein/monthly/2015100100/2015123100"
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
-def generate_language_dict():
-    with open("list_of_wiki_languages.txt", "r") as file:
-        lines = file.read().split(",")
-        for i in range(len(lines)):
-            #lines[i] = re.sub("\s","",lines[i])
-            lines[i] = lines[i].strip()
-            lines[i] = lines[i].strip("\'")
-        dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
-    return dictionary
+# def generate_language_dict():
+    # with open("list_of_wiki_languages.txt", "r") as file:
+    #     lines = file.read().split(",")
+    #     for i in range(len(lines)):
+    #         #lines[i] = re.sub("\s","",lines[i])
+    #         lines[i] = lines[i].strip()
+    #         lines[i] = lines[i].strip("\'")
+    #     dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
+    # return dictionary
 
 
 ###############
@@ -84,6 +85,7 @@ def get_total_views(data):
 ######################
 
 if __name__ == "__main__":
-    language_dict = generate_language_dict()
-
-    get_page_view("Albert Einstein", language_dict["Icelandic"])
+    query = "Albert Einstein"
+    language = "Icelandic"
+    num_views = get_page_view(query, language_dict[language])
+    print(query + " has " + str(num_views) + " views in " + language)

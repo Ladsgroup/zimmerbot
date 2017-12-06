@@ -1,14 +1,15 @@
 import pywikibot
 import json, urllib
+from language_dict import language_dict
 
-def generate_language_dict():
-    with open("list_of_wiki_languages.txt", "r") as file:
-        lines = file.read().split(",")
-        for i in range(len(lines)):
-            lines[i] = lines[i].strip()
-            lines[i] = lines[i].strip("\'")
-        dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
-    return dictionary
+# def generate_language_dict():
+#     with open("list_of_wiki_languages.txt", "r") as file:
+#         lines = file.read().split(",")
+#         for i in range(len(lines)):
+#             lines[i] = lines[i].strip()
+#             lines[i] = lines[i].strip("\'")
+#         dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
+#     return dictionary
 
 
 ### primary function
@@ -31,6 +32,5 @@ def getlinks(site, pageName):
 
 
 if __name__ == "__main__":
-    language_dict = generate_language_dict()
 
     count_backlinks("Pear", language_dict["English"])

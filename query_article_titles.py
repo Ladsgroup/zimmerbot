@@ -3,20 +3,21 @@ import requests
 import json, urllib
 import re
 import sys
+from language_dict import language_dict
 
 base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
 #url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
-def generate_language_dict():
-    with open("list_of_wiki_languages.txt", "r") as file:
-        lines = file.read().split(",")
-        for i in range(len(lines)):
-            #lines[i] = re.sub("\s","",lines[i])
-            lines[i] = lines[i].strip()
-            lines[i] = lines[i].strip("\'")
-        dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
-    return dictionary
+# def generate_language_dict():
+#     with open("list_of_wiki_languages.txt", "r") as file:
+#         lines = file.read().split(",")
+#         for i in range(len(lines)):
+#             #lines[i] = re.sub("\s","",lines[i])
+#             lines[i] = lines[i].strip()
+#             lines[i] = lines[i].strip("\'")
+#         dictionary = {lines[i+1]:lines[i] for i in range(0, len(lines), 2)}
+#     return dictionary
 
 ###############
 #MAIN FUNCTION#
@@ -116,7 +117,6 @@ def suggestion_exists(json_data):
 ######################
 
 if __name__ == "__main__":
-    language_dict = generate_language_dict()
 
     # query_articles("ARTICLE NAME", "LANGUAGE")
     article_dictionaries = query_articles("tapas", language_dict["Spanish"])
