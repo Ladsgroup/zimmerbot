@@ -10,7 +10,9 @@
 
         <div class="grid-container">
 
-            <h2>ZimmerBot<img style="width: 7%; padding: 8px;" src = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Wikimedia-logo-V.svg/600px-Wikimedia-logo-V.svg.png"></img></h2>
+            <h2>ZimmerBot
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Wikimedia_Foundation_logo_-_vertical.svg/125px-Wikimedia_Foundation_logo_-_vertical.svg.png"></img>
+            </h2>
             <hr>
             <p>
                 Welcome to the home page of ZimmerBot, a tool created and maintained by DiversaTech at Berkeley since Fall 2017!
@@ -522,21 +524,31 @@
                 </div>
             </div>
 
-            <img style="width: 30%;" src = "https://image.ibb.co/ffYiHw/dtlogo.png"></img>
-            <h5 style = "padding-left: 50px; padding-top: 15px;">Contributors</h5>
+            <p>&nbsp;</p>
+
+            <div class="small-12 large-3 cell">
+                <h4>Contributors from </h4>
+            </div>
+            <div class="grid-x grid-padding-x">
+                <div class="small-12 large-3 cell">
+                    <img src = "https://image.ibb.co/ffYiHw/dtlogo.png"></img>
+                </div>
+            </div>
             <hr>
-            <div class="grid-x grid-padding-x small-up-1 large-up-3" style="padding-left: 50px;">
-                <div class="cell"><li> Jihoon An </li></div>
-                <div class="cell"><li> Sean Lee </li></div>
-                <div class="cell"><li> Leon Ming </li></div>
-                <div class="cell"><li> Jimmy Tsang </li></div>
-                <div class="cell"><li> Neil Palleti </li></div>
-                <div class="cell"><li> Celena Chang </li></div>
-                <div class="cell"><li> Jade Yen </li></div>
-                <div class="cell"><li> Cynthia Ha </li></div>
-                <div class="cell"><li> Tiffany Pham </li></div>
-                <div class="cell"><li> Hannah Kim </li></div>
-                <div class="cell"><li> Vishnu Kumar </li></div>
+            <div class="small-12 cell">
+                <div class="grid-x grid-padding-x small-up-1 large-up-4">
+                    <div class="cell"><li> Jihoon An </li></div>
+                    <div class="cell"><li> Sean Lee </li></div>
+                    <div class="cell"><li> Leon Ming </li></div>
+                    <div class="cell"><li> Jimmy Tsang </li></div>
+                    <div class="cell"><li> Neil Palleti </li></div>
+                    <div class="cell"><li> Celena Chang </li></div>
+                    <div class="cell"><li> Jade Yen </li></div>
+                    <div class="cell"><li> Cynthia Ha </li></div>
+                    <div class="cell"><li> Tiffany Pham </li></div>
+                    <div class="cell"><li> Hannah Kim </li></div>
+                    <div class="cell"><li> Vishnu Kumar </li></div>
+                </div>
             </div>
             <hr>
             <br>
@@ -570,7 +582,7 @@
                 };
                 var request = JSON.stringify(
                     {
-                        "query" : $("#query").val(),
+                        "query" : encodeURI($("#query").val()),
                         "language" : $("#language").val(),
                         "filter" : $("#filter").val(),
                         "limit" : $("#limit").val(),
