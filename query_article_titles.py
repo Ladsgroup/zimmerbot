@@ -70,7 +70,6 @@ def get_articles_from_names(article_names, language_code):
     return articles
 
 
-
 #Returns the search replacement suggestion for the user's search
 #Example:
 #    Input: "asdf Einstein!"
@@ -83,6 +82,87 @@ def get_search_suggestion(search_item, language_code):
         return data["query"]["searchinfo"]["suggestion"]
     else:
         return None
+
+#Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM that are in CATEGORY
+#The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET
+def query_articles_in_category(search_item, language_code, category):
+    data = get_data(search_item, language_code)
+    result = []
+
+    if (category != None or category != ""): #Gets articles about SEARCH_ITEM that are in CATEGORY
+        article_id_title_dict = get_articles_in_category(category, language_code)
+        for e in data["query"]["search"]:
+            if e["pageid"] in article_id_title_dict:
+                e.pop("ns", None)
+                e.pop("size", None)
+                e.pop("timestamp", None)
+                result += [e]
+    else: #Gets articles about SEARCH_ITEM (no CATEGORY specified)
+        for e in data["query"]["search"]:
+            #remove unwanted dictionary keys
+            e.pop("ns", None)
+            e.pop("size", None)
+            e.pop("timestamp", None)
+            result += [e]
+    
+    if not result:
+        print("Please try another search query.")
+        if suggestion_exists(data):
+            print("Suggestion: " + get_search_suggestion(search_item, language_code))
+
+    return result
+
+
+
+
+
+##################
+#QUERY CATEGORIES#
+##################
+
+#returns a JSON object of categorymembers (articles in CATEGORY)
+def get_category_members(category, language_code):
+     with urllib.request.urlopen(build_category_members_url(category, language_code)) as url:
+        data = json.loads(url.read().decode())
+        return data
+
+#builds the url for the Categorymembers API
+def build_category_members_url(category, language_code):
+    #site = pywikibot.getSite(language_code)
+    wiki_language_url = language_code + ".wikipedia.org/"
+
+    category_base_url = "w/api.php?format=json&action=query&list=categorymembers&cmlimit=500&cmtitle=Category:"
+    category = re.sub("\s", "%20", category)
+    full_category_url = "https://" + wiki_language_url + category_base_url + category 
+
+    return full_category_url
+
+
+#returns a dictionary (key: article id, value: article title) of articles in CATEGORY
+def get_articles_in_category(category, language_code):
+     articles_in_category = get_category_members(category, language_code)
+     article_id_title_dict = {}
+     for e in articles_in_category["query"]["categorymembers"]:
+        article_id_title_dict[e["pageid"]] = e["title"]
+
+     return article_id_title_dict
+
+#returns a JSON object of categories with prefix CATEGORY
+def get_categories(category, language_code):
+    category = re.sub("\s", "%20", category)
+    url = "http://en.wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
+    with urllib.request.urlopen(url) as url:
+        data = json.loads(url.read().decode())
+        return data
+
+#returns a list of categories starting with prefix CATEGORY
+def query_categories(category, language_code):
+    result = []
+    categories_data = get_categories(category, language_code)
+    for e in categories_data["query"]["allcategories"]:
+        result.extend(e.values())
+    return result
+
 
 
 ##################
@@ -122,3 +202,5 @@ if __name__ == "__main__":
     get_article_names_from_query(article_dictionaries)
 
     get_search_suggestion("asdf Einstein!", language_dict["English"])
+
+
