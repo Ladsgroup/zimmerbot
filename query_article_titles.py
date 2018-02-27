@@ -5,9 +5,6 @@ import re
 import sys
 from language_dict import language_dict
 
-base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
-#url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
-
 #Create languages dictionary from "list_of_wiki_languages.txt"
 # def generate_language_dict():
 #     with open("list_of_wiki_languages.txt", "r") as file:
@@ -113,32 +110,35 @@ def query_articles_in_category(search_item, language_code, category):
     return result
 
 
-
-
-
 ##################
-#QUERY CATEGORIES#
+#HELPER FUNCTIONS#
 ##################
 
-#returns a JSON object of categorymembers (articles in CATEGORY)
-def get_category_members(category, language_code):
-     with urllib.request.urlopen(build_category_members_url(category, language_code)) as url:
+#Returns JSON data from the Wikipedia Web API for querying article titles
+def get_data(search_item, language_code):
+    with urllib.request.urlopen(build_url(search_item, language_code)) as url:
         data = json.loads(url.read().decode())
         return data
 
-#builds the url for the Categorymembers API
-def build_category_members_url(category, language_code):
+#Builds the json request URL for querying article titles
+def build_url(search_item, language_code):
     #site = pywikibot.getSite(language_code)
-    wiki_language_url = language_code + ".wikipedia.org/"
+    search_item = re.sub("\s", "%", search_item.strip())
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&list=search&srlimit=500&srsearch=" + search_item
+    return result
 
-    category_base_url = "w/api.php?format=json&action=query&list=categorymembers&cmlimit=500&cmtitle=Category:"
-    category = re.sub("\s", "%20", category)
-    full_category_url = "https://" + wiki_language_url + category_base_url + category 
-
-    return full_category_url
+#returns True/False depending if there is a search replacement suggestion for the user's search
+def suggestion_exists(json_data):
+    return "suggestion" in json_data["query"]["searchinfo"]
 
 
-#returns a dictionary (key: article id, value: article title) of articles in CATEGORY
+
+############################
+#QUERY CATEGORIES FUNCTIONS#
+############################
+
+#Returns a dictionary (key: article id, value: article title) of articles in CATEGORY
+#Uses MediaWiki's API:Categorymembers
 def get_articles_in_category(category, language_code):
      articles_in_category = get_category_members(category, language_code)
      article_id_title_dict = {}
@@ -147,15 +147,22 @@ def get_articles_in_category(category, language_code):
 
      return article_id_title_dict
 
-#returns a JSON object of categories with prefix CATEGORY
-def get_categories(category, language_code):
-    category = re.sub("\s", "%20", category)
-    url = "http://en.wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
-    with urllib.request.urlopen(url) as url:
+#Helper for get_articles_in_category(): returns a JSON object of categorymembers (articles in CATEGORY)
+def get_category_members(category, language_code):
+     with urllib.request.urlopen(build_category_members_url(category, language_code)) as url:
         data = json.loads(url.read().decode())
         return data
 
-#returns a list of categories starting with prefix CATEGORY
+#Helper for get_category_members(): builds the url for the Categorymembers API
+def build_category_members_url(category, language_code):
+    #site = pywikibot.getSite(language_code)
+    category = re.sub("\s", "%20", category)
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=500&cmtitle=Category:" + category 
+    return result
+
+
+#Returns a list of categories starting with prefix CATEGORY
+#Uses MediaWiki's API:Allcategories
 def query_categories(category, language_code):
     result = []
     categories_data = get_categories(category, language_code)
@@ -163,31 +170,34 @@ def query_categories(category, language_code):
         result.extend(e.values())
     return result
 
-
-
-##################
-#HELPER FUNCTIONS#
-##################
-
-#Returns JSON data from the Wikipedia Web API for querying
-def get_data(search_item, language_code):
-    with urllib.request.urlopen(build_url(search_item, language_code)) as url:
+#Helper for query_categories(): returns a JSON object of categories with prefix CATEGORY
+def get_categories(category, language_code):
+    category = re.sub("\s", "%20", category)
+    url = "http://en.wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
+    with urllib.request.urlopen(url) as url:
         data = json.loads(url.read().decode())
         return data
 
-#Builds the json request URL
-def build_url(search_item, language_code):
-    site = pywikibot.getSite(language_code)
-    wiki_language_url = language_code + ".wikipedia.org/"
+#Returns a list of subcategories of CATEGORY
+def get_sub_categories(category, language_code):
+    subcategories, stack = [], []
+    stack.append(category)
+    print(category)
+    while stack and len(subcategories) < 50: #if stack is empty
+        curr_category = stack.pop()
+        try:
+            curr_category.encode("ascii")
+        except:
+            continue
+        subcategories += [curr_category]
+        print (curr_category)
+        category_members = get_category_members(curr_category, language_code) #returns a JSON of the data
+        for member in category_members["query"]["categorymembers"]:
+            if member["type"] == "subcat":
+                stack.append(member["title"][9:]) #[9:] to remove the leading "Category:" in the category name
+    return subcategories
 
-    url_search_extension = re.sub("\s", "%", search_item.strip())
 
-    result = "https://" + wiki_language_url + base_url + url_search_extension
-    return result
-
-#returns True/False depending if there is a search replacement suggestion for the user's search
-def suggestion_exists(json_data):
-    return "suggestion" in json_data["query"]["searchinfo"]
 
 
 
@@ -197,7 +207,7 @@ def suggestion_exists(json_data):
 
 if __name__ == "__main__":
 
-    # query_articles("ARTICLE NAME", "LANGUAGE")
+    #query_articles("ARTICLE NAME", "LANGUAGE")
     article_dictionaries = query_articles("tapas", language_dict["Spanish"])
     get_article_names_from_query(article_dictionaries)
 
