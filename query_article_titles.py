@@ -140,12 +140,35 @@ def suggestion_exists(json_data):
 #Returns a dictionary (key: article id, value: article title) of articles in CATEGORY
 #Uses MediaWiki's API:Categorymembers
 def get_articles_in_category(category, language_code):
-     articles_in_category = get_category_members(category, language_code)
-     article_id_title_dict = {}
-     for e in articles_in_category["query"]["categorymembers"]:
-        article_id_title_dict[e["pageid"]] = e["title"]
+    articles_in_category = get_category_members(category, language_code)
+    article_id_title_dict = {}
+    subcategories = []
+    for e in articles_in_category["query"]["categorymembers"]:
+        if (e["type"] == "subcat"):
+            subcat_name = e["title"][9:]
+            try:
+                subcat_name.encode("ascii")
+            except:
+                continue
+            subcategories += [subcat_name]
+        elif (e["type"] == "page"):
+            article_id_title_dict[e["pageid"]] = e["title"]
+    print("CATEGORY: ", category)
+    print ("ARTICLE LENGTH: ", len(article_id_title_dict))
+    print ("SUBCAT LENGTH: ", len(subcategories))
+    if (len(article_id_title_dict) >= 4) and len(subcategories) < len(article_id_title_dict):
+        return article_id_title_dict
+    else:
+        if len(subcategories) >= 20: 
+            truncated_list_of_subcategories = [subcategories[i] for i in range(0, len(subcategories), 10)]
+        else: 
+            truncated_list_of_subcategories = subcategories
+        for subcat in truncated_list_of_subcategories:
+            print("updated article length: ", len(article_id_title_dict))
+            article_id_title_dict.update(get_articles_in_category(subcat, language_code))
 
-     return article_id_title_dict
+    print ("=====returning=====")
+    return article_id_title_dict
 
 #Helper for get_articles_in_category(): returns a JSON object of categorymembers (articles in CATEGORY)
 def get_category_members(category, language_code):
