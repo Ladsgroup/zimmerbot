@@ -4,6 +4,9 @@ import json, urllib
 import re
 import sys
 from language_dict import language_dict
+import pickle #for serializing articles_of_categories dictionary
+import sqlite3
+
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
 # def generate_language_dict():
@@ -84,10 +87,19 @@ def get_search_suggestion(search_item, language_code):
 #The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET
 def query_articles_in_category(search_item, language_code, category):
     data = get_data(search_item, language_code)
+
+    #dictionary of categories mapping to dictionaries (i.e. {category : {article_id: article_title}})
+    articles_of_categories_dict = deserialize_dictionary("articles_of_categories.pickle")
     result = []
 
     if (category != None or category != ""): #Gets articles about SEARCH_ITEM that are in CATEGORY
-        article_id_title_dict = get_articles_in_category(category, language_code)
+        if category in articles_of_categories_dict:
+            article_id_title_dict = articles_of_categories_dict[category]
+        else:
+            article_id_title_dict = get_articles_in_category(category, language_code)
+            articles_of_categories_dict.update({category: article_id_title_dict})
+            serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
+            #dictionary_to_json_file(article_id_title_dict, "articles_of_categories.json")
         for e in data["query"]["search"]:
             if e["pageid"] in article_id_title_dict:
                 e.pop("ns", None)
@@ -131,6 +143,27 @@ def build_url(search_item, language_code):
 def suggestion_exists(json_data):
     return "suggestion" in json_data["query"]["searchinfo"]
 
+#Saves DICTIONARY to a json file called FILENAME
+def dictionary_to_json_file(dictionary, filename):
+    f = open(filename, "w")
+    f.write(json.dumps(dictionary))
+    f.close()
+
+#Returns the dictionary stored in the JSON file called FILENAME
+def json_file_to_dictionary(filename):
+    f = open(filename, "r")
+    dictionary = json.load(f)
+    return dictionary
+
+#serializes DICTIONARY to FILENAME
+def serialize_dictionary(dictionary, filename):
+    with open(filename, "wb") as f:
+        pickle.dump(dictionary, f, pickle.HIGHEST_PROTOCOL)
+
+#Returns the deserialized dictionary in FILENAME
+def deserialize_dictionary(filename):
+    with open(filename, "rb") as f:
+        return pickle.load(f)
 
 
 ############################
@@ -229,11 +262,15 @@ def get_sub_categories(category, language_code):
 ######################
 
 if __name__ == "__main__":
+    #dictionary = deserialize_dictionary("articles_of_categories.pickle")
+    #print(dictionary)
+    #serialize_dictionary({}, "articles_of_categories.pickle")
 
+    query_articles_in_category("ball game", language_dict["English"], "sports")
     #query_articles("ARTICLE NAME", "LANGUAGE")
-    article_dictionaries = query_articles("tapas", language_dict["Spanish"])
-    get_article_names_from_query(article_dictionaries)
+    # article_dictionaries = query_articles("tapas", language_dict["Spanish"])
+    # get_article_names_from_query(article_dictionaries)
 
-    get_search_suggestion("asdf Einstein!", language_dict["English"])
+    # get_search_suggestion("asdf Einstein!", language_dict["English"])
 
 
