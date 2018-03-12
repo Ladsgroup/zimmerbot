@@ -2,6 +2,8 @@ from flask import request, url_for
 from flask_api import FlaskAPI, status, exceptions
 from flask_cors import CORS
 from zimmerbot import *
+from category_autocomplete import *
+
 
 application = FlaskAPI(__name__)
 CORS(application)
@@ -19,6 +21,16 @@ def get_links():
         if not list_of_links:
             return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_links
+
+@application.route("/category-autocomplete", methods=["GET"])
+def get_categories():
+    data = request.data
+    if data["language"] not in ["en", "ru", "fr"]:
+        return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
+    list_of_categories = get_category_suggestions(data["prefix"], data["language"])
+    if not list_of_categories:
+        return ["No search results found for this query"], status.HTTP_202_ACCEPTED
+    return list_of_categories
 
 
 # run the app.
