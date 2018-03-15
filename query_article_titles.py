@@ -4,8 +4,8 @@ import json, urllib
 import re
 import sys
 from language_dict import language_dict
-import pickle #for serializing articles_of_categories dictionary
 import sqlite3
+import random
 
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
@@ -85,41 +85,41 @@ def get_search_suggestion(search_item, language_code):
 
 #Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM that are in CATEGORY
 #The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET
-def query_articles_in_category(search_item, language_code, category):
-    data = get_data(search_item, language_code)
+# def query_articles_in_category(search_item, language_code, category):
+#     data = get_data(search_item, language_code)
 
-    #dictionary of categories mapping to dictionaries (i.e. {category : {article_id: article_title}})
-    articles_of_categories_dict = deserialize_dictionary("articles_of_categories.pickle")
-    result = []
+#     #dictionary of categories mapping to dictionaries (i.e. {category : {article_id: article_title}})
+#     articles_of_categories_dict = deserialize_dictionary("articles_of_categories.pickle")
+#     result = []
 
-    if (category != None or category != ""): #Gets articles about SEARCH_ITEM that are in CATEGORY
-        if category in articles_of_categories_dict:
-            article_id_title_dict = articles_of_categories_dict[category]
-        else:
-            article_id_title_dict = get_articles_in_category(category, language_code)
-            articles_of_categories_dict.update({category: article_id_title_dict})
-            serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
-            #dictionary_to_json_file(article_id_title_dict, "articles_of_categories.json")
-        for e in data["query"]["search"]:
-            if e["pageid"] in article_id_title_dict:
-                e.pop("ns", None)
-                e.pop("size", None)
-                e.pop("timestamp", None)
-                result += [e]
-    else: #Gets articles about SEARCH_ITEM (no CATEGORY specified)
-        for e in data["query"]["search"]:
-            #remove unwanted dictionary keys
-            e.pop("ns", None)
-            e.pop("size", None)
-            e.pop("timestamp", None)
-            result += [e]
+#     if (category != None or category != ""): #Gets articles about SEARCH_ITEM that are in CATEGORY
+#         if category in articles_of_categories_dict:
+#             article_id_title_dict = articles_of_categories_dict[category]
+#         else:
+#             limit = 200 #Can change the limit
+#             article_id_title_dict = get_articles_in_category(category, language_code, limit) 
+#             articles_of_categories_dict.update({category: article_id_title_dict})
+#             serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
+#         for e in data["query"]["search"]:
+#             if e["pageid"] in article_id_title_dict:
+#                 e.pop("ns", None)
+#                 e.pop("size", None)
+#                 e.pop("timestamp", None)
+#                 result += [e]
+#     else: #Gets articles about SEARCH_ITEM (no CATEGORY specified)
+#         for e in data["query"]["search"]:
+#             #remove unwanted dictionary keys
+#             e.pop("ns", None)
+#             e.pop("size", None)
+#             e.pop("timestamp", None)
+#             result += [e]
     
-    if not result:
-        print("Please try another search query.")
-        if suggestion_exists(data):
-            print("Suggestion: " + get_search_suggestion(search_item, language_code))
+#     if not result:
+#         print("Please try another search query.")
+#         if suggestion_exists(data):
+#             print("Suggestion: " + get_search_suggestion(search_item, language_code))
 
-    return result
+#     return result
 
 
 ##################
@@ -170,13 +170,23 @@ def deserialize_dictionary(filename):
 #QUERY CATEGORIES FUNCTIONS#
 ############################
 
+#Returns a dictionary (key: article id, value: article title) of LIMIT number of articles in CATEGORY
+#(randomly prunes the dictionary returned by get_articles_in_category if initially len(dictionary) > LIMIT)
+def get_limit_number_of_articles_in_category(category, language_code, limit):
+    articles_in_category = get_articles_in_category(category, language_code, limit)
+    if len(articles_in_category) > limit:
+        for key in random.sample(articles_in_category.keys(), len(articles_in_category) - limit):
+            articles_in_category.pop(key) # removes articles from the dictionary randomly
+    return articles_in_category
+
+
 #Returns a dictionary (key: article id, value: article title) of articles in CATEGORY
 #Uses MediaWiki's API:Categorymembers
-def get_articles_in_category(category, language_code):
-    articles_in_category = get_category_members(category, language_code)
+def get_articles_in_category(category, language_code, limit):
+    category_members = get_category_members(category, language_code, limit)
     article_id_title_dict = {}
     subcategories = []
-    for e in articles_in_category["query"]["categorymembers"]:
+    for e in category_members["query"]["categorymembers"]:
         if (e["type"] == "subcat"):
             subcat_name = e["title"][9:]
             try:
@@ -186,34 +196,34 @@ def get_articles_in_category(category, language_code):
             subcategories += [subcat_name]
         elif (e["type"] == "page"):
             article_id_title_dict[e["pageid"]] = e["title"]
-    print("CATEGORY: ", category)
-    print ("ARTICLE LENGTH: ", len(article_id_title_dict))
-    print ("SUBCAT LENGTH: ", len(subcategories))
-    if (len(article_id_title_dict) >= 4) and len(subcategories) < len(article_id_title_dict):
+            if len(article_id_title_dict) >= limit:
+                return article_id_title_dict
+    # print("CATEGORY: ", category)
+    # print ("ARTICLE LENGTH: ", len(article_id_title_dict))
+    # print ("SUBCAT LENGTH: ", len(subcategories))
+    
+    if len(article_id_title_dict) >= limit:
         return article_id_title_dict
     else:
-        if len(subcategories) >= 20: 
-            truncated_list_of_subcategories = [subcategories[i] for i in range(0, len(subcategories), 10)]
-        else: 
-            truncated_list_of_subcategories = subcategories
-        for subcat in truncated_list_of_subcategories:
-            print("updated article length: ", len(article_id_title_dict))
-            article_id_title_dict.update(get_articles_in_category(subcat, language_code))
+        for subcat in subcategories:
+            #print("updated article length: ", len(article_id_title_dict))
+            remaining_limit = limit - len(article_id_title_dict)
+            article_id_title_dict.update(get_articles_in_category(subcat, language_code, remaining_limit))
 
-    print ("=====returning=====")
+    #print ("=====returning=====")
     return article_id_title_dict
 
 #Helper for get_articles_in_category(): returns a JSON object of categorymembers (articles in CATEGORY)
-def get_category_members(category, language_code):
-     with urllib.request.urlopen(build_category_members_url(category, language_code)) as url:
+def get_category_members(category, language_code, limit):
+     with urllib.request.urlopen(build_category_members_url(category, language_code, limit)) as url:
         data = json.loads(url.read().decode())
         return data
 
 #Helper for get_category_members(): builds the url for the Categorymembers API
-def build_category_members_url(category, language_code):
+def build_category_members_url(category, language_code, limit):
     #site = pywikibot.getSite(language_code)
     category = re.sub("\s", "%20", category)
-    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=500&cmtitle=Category:" + category 
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=" + str(limit) + "&cmtitle=Category:" + category 
     return result
 
 
@@ -266,7 +276,9 @@ if __name__ == "__main__":
     #print(dictionary)
     #serialize_dictionary({}, "articles_of_categories.pickle")
 
-    query_articles_in_category("ball game", language_dict["English"], "sports")
+    articles = get_limit_number_of_articles_in_category("sports", language_dict["English"], 2)
+    print("number of articles received: ", len(articles))
+    print(articles)
     #query_articles("ARTICLE NAME", "LANGUAGE")
     # article_dictionaries = query_articles("tapas", language_dict["Spanish"])
     # get_article_names_from_query(article_dictionaries)
