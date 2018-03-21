@@ -6,13 +6,21 @@ import sys
 
 # MAIN FUNCTION
 
-def main(query, language_code, filter_method, limit, stub):
+def main(method, query, language_code, filter_method, limit, stub):
     # Process script arguments
     # For now, we only support limiting by number of articles, not total package size
     limit = min(int(limit), 500)
 
-    # Get the query results (list of dictionaries)
-    article_dictionaries = query_articles(query, language_code)[:limit+20]
+    if method == "individual":
+        # Get the query results (list of dictionaries)
+        article_dictionaries = query_articles(query, language_code)[:limit+20]
+    elif method == "category":
+        article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
+    elif method == "related":
+        #todo
+    elif method == "linked":
+        #todo
+
     # List of article titles
     article_names = get_article_names_from_query(article_dictionaries)
 

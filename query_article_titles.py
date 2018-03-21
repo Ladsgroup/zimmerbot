@@ -180,8 +180,15 @@ def get_limit_number_of_articles_in_category(category, language_code, limit):
     return articles_in_category
 
 
-#Returns a dictionary (key: article id, value: article title) of articles in CATEGORY
+#Returns a dictionary of articles in CATEGORY
 #Uses MediaWiki's API:Categorymembers
+#Input: "Swift", "English"
+#    Output:
+#        [
+#         {"title":"Swift", "pageid":455},
+#         {"title": "Taylor Swift", "pageid":280},
+#         {"title": "Reputation", "pageid":670}
+#        ]
 def get_articles_in_category(category, language_code, limit):
     category_members = get_category_members(category, language_code, limit)
     article_id_title_dict = {}
@@ -196,6 +203,8 @@ def get_articles_in_category(category, language_code, limit):
             subcategories += [subcat_name]
         elif (e["type"] == "page"):
             article_id_title_dict[e["pageid"]] = e["title"]
+            article_id_title_dict["title"] = e["title"]
+            article_id_title_dict["pageid"] = e["pageid"]
             if len(article_id_title_dict) >= limit:
                 return article_id_title_dict
     # print("CATEGORY: ", category)
