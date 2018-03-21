@@ -22,7 +22,7 @@ def get_links():
             return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_links
 
-@application.route("/category-autocomplete", methods=["GET"])
+@application.route("/category-autocomplete", methods=["GET", "POST"])
 def get_categories():
     data = request.data
     if data["language"] not in ["en", "ru", "fr"]:
