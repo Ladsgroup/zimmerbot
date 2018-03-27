@@ -4,9 +4,9 @@ import json, urllib
 import re
 import sys
 from language_dict import language_dict
+import sqlite3
+import random
 
-base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
-#url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
 
 #Create languages dictionary from "list_of_wiki_languages.txt"
 # def generate_language_dict():
@@ -70,7 +70,6 @@ def get_articles_from_names(article_names, language_code):
     return articles
 
 
-
 #Returns the search replacement suggestion for the user's search
 #Example:
 #    Input: "asdf Einstein!"
@@ -84,30 +83,196 @@ def get_search_suggestion(search_item, language_code):
     else:
         return None
 
+#Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM that are in CATEGORY
+#The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET
+# def query_articles_in_category(search_item, language_code, category):
+#     data = get_data(search_item, language_code)
+
+#     #dictionary of categories mapping to dictionaries (i.e. {category : {article_id: article_title}})
+#     articles_of_categories_dict = deserialize_dictionary("articles_of_categories.pickle")
+#     result = []
+
+#     if (category != None or category != ""): #Gets articles about SEARCH_ITEM that are in CATEGORY
+#         if category in articles_of_categories_dict:
+#             article_id_title_dict = articles_of_categories_dict[category]
+#         else:
+#             limit = 200 #Can change the limit
+#             article_id_title_dict = get_articles_in_category(category, language_code, limit) 
+#             articles_of_categories_dict.update({category: article_id_title_dict})
+#             serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
+#         for e in data["query"]["search"]:
+#             if e["pageid"] in article_id_title_dict:
+#                 e.pop("ns", None)
+#                 e.pop("size", None)
+#                 e.pop("timestamp", None)
+#                 result += [e]
+#     else: #Gets articles about SEARCH_ITEM (no CATEGORY specified)
+#         for e in data["query"]["search"]:
+#             #remove unwanted dictionary keys
+#             e.pop("ns", None)
+#             e.pop("size", None)
+#             e.pop("timestamp", None)
+#             result += [e]
+    
+#     if not result:
+#         print("Please try another search query.")
+#         if suggestion_exists(data):
+#             print("Suggestion: " + get_search_suggestion(search_item, language_code))
+
+#     return result
+
 
 ##################
 #HELPER FUNCTIONS#
 ##################
 
-#Returns JSON data from the Wikipedia Web API for querying
+#Returns JSON data from the Wikipedia Web API for querying article titles
 def get_data(search_item, language_code):
     with urllib.request.urlopen(build_url(search_item, language_code)) as url:
         data = json.loads(url.read().decode())
         return data
 
-#Builds the json request URL
+#Builds the json request URL for querying article titles
 def build_url(search_item, language_code):
-    site = pywikibot.getSite(language_code)
-    wiki_language_url = language_code + ".wikipedia.org/"
-
-    url_search_extension = re.sub("\s", "%", search_item.strip())
-
-    result = "https://" + wiki_language_url + base_url + url_search_extension
+    #site = pywikibot.getSite(language_code)
+    search_item = re.sub("\s", "%", search_item.strip())
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&list=search&srlimit=500&srsearch=" + search_item
     return result
 
 #returns True/False depending if there is a search replacement suggestion for the user's search
 def suggestion_exists(json_data):
     return "suggestion" in json_data["query"]["searchinfo"]
+
+#Saves DICTIONARY to a json file called FILENAME
+def dictionary_to_json_file(dictionary, filename):
+    f = open(filename, "w")
+    f.write(json.dumps(dictionary))
+    f.close()
+
+#Returns the dictionary stored in the JSON file called FILENAME
+def json_file_to_dictionary(filename):
+    f = open(filename, "r")
+    dictionary = json.load(f)
+    return dictionary
+
+#serializes DICTIONARY to FILENAME
+def serialize_dictionary(dictionary, filename):
+    with open(filename, "wb") as f:
+        pickle.dump(dictionary, f, pickle.HIGHEST_PROTOCOL)
+
+#Returns the deserialized dictionary in FILENAME
+def deserialize_dictionary(filename):
+    with open(filename, "rb") as f:
+        return pickle.load(f)
+
+
+############################
+#QUERY CATEGORIES FUNCTIONS#
+############################
+
+#Returns a dictionary (key: article id, value: article title) of LIMIT number of articles in CATEGORY
+#(randomly prunes the dictionary returned by get_articles_in_category if initially len(dictionary) > LIMIT)
+def get_limit_number_of_articles_in_category(category, language_code, limit):
+    articles_in_category = get_articles_in_category(category, language_code, limit)
+    if len(articles_in_category) > limit:
+        for key in random.sample(articles_in_category.keys(), len(articles_in_category) - limit):
+            articles_in_category.pop(key) # removes articles from the dictionary randomly
+    return articles_in_category
+
+
+#Returns a dictionary of articles in CATEGORY
+#Uses MediaWiki's API:Categorymembers
+#Input: "Swift", "English"
+#    Output:
+#        [
+#         {"title":"Swift", "pageid":455},
+#         {"title": "Taylor Swift", "pageid":280},
+#         {"title": "Reputation", "pageid":670}
+#        ]
+def get_articles_in_category(category, language_code, limit):
+    category_members = get_category_members(category, language_code, limit)
+    article_id_title_dict = {}
+    subcategories = []
+    for e in category_members["query"]["categorymembers"]:
+        if (e["type"] == "subcat"):
+            subcat_name = e["title"][9:]
+            try:
+                subcat_name.encode("ascii")
+            except:
+                continue
+            subcategories += [subcat_name]
+        elif (e["type"] == "page"):
+            article_id_title_dict[e["pageid"]] = e["title"]
+            article_id_title_dict["title"] = e["title"]
+            article_id_title_dict["pageid"] = e["pageid"]
+            if len(article_id_title_dict) >= limit:
+                return article_id_title_dict
+    # print("CATEGORY: ", category)
+    # print ("ARTICLE LENGTH: ", len(article_id_title_dict))
+    # print ("SUBCAT LENGTH: ", len(subcategories))
+    
+    if len(article_id_title_dict) >= limit:
+        return article_id_title_dict
+    else:
+        for subcat in subcategories:
+            #print("updated article length: ", len(article_id_title_dict))
+            remaining_limit = limit - len(article_id_title_dict)
+            article_id_title_dict.update(get_articles_in_category(subcat, language_code, remaining_limit))
+
+    #print ("=====returning=====")
+    return article_id_title_dict
+
+#Helper for get_articles_in_category(): returns a JSON object of categorymembers (articles in CATEGORY)
+def get_category_members(category, language_code, limit):
+     with urllib.request.urlopen(build_category_members_url(category, language_code, limit)) as url:
+        data = json.loads(url.read().decode())
+        return data
+
+#Helper for get_category_members(): builds the url for the Categorymembers API
+def build_category_members_url(category, language_code, limit):
+    #site = pywikibot.getSite(language_code)
+    category = re.sub("\s", "%20", category)
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=" + str(limit) + "&cmtitle=Category:" + category 
+    return result
+
+
+#Returns a list of categories starting with prefix CATEGORY
+#Uses MediaWiki's API:Allcategories
+def query_categories(category, language_code):
+    result = []
+    categories_data = get_categories(category, language_code)
+    for e in categories_data["query"]["allcategories"]:
+        result.extend(e.values())
+    return result
+
+#Helper for query_categories(): returns a JSON object of categories with prefix CATEGORY
+def get_categories(category, language_code):
+    category = re.sub("\s", "%20", category)
+    url = "http://en.wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
+    with urllib.request.urlopen(url) as url:
+        data = json.loads(url.read().decode())
+        return data
+
+#Returns a list of subcategories of CATEGORY
+def get_sub_categories(category, language_code):
+    subcategories, stack = [], []
+    stack.append(category)
+    print(category)
+    while stack and len(subcategories) < 50: #if stack is empty
+        curr_category = stack.pop()
+        try:
+            curr_category.encode("ascii")
+        except:
+            continue
+        subcategories += [curr_category]
+        print (curr_category)
+        category_members = get_category_members(curr_category, language_code) #returns a JSON of the data
+        for member in category_members["query"]["categorymembers"]:
+            if member["type"] == "subcat":
+                stack.append(member["title"][9:]) #[9:] to remove the leading "Category:" in the category name
+    return subcategories
+
+
 
 
 
@@ -116,9 +281,17 @@ def suggestion_exists(json_data):
 ######################
 
 if __name__ == "__main__":
+    #dictionary = deserialize_dictionary("articles_of_categories.pickle")
+    #print(dictionary)
+    #serialize_dictionary({}, "articles_of_categories.pickle")
 
-    # query_articles("ARTICLE NAME", "LANGUAGE")
-    article_dictionaries = query_articles("tapas", language_dict["Spanish"])
-    get_article_names_from_query(article_dictionaries)
+    articles = get_limit_number_of_articles_in_category("sports", language_dict["English"], 2)
+    print("number of articles received: ", len(articles))
+    print(articles)
+    #query_articles("ARTICLE NAME", "LANGUAGE")
+    # article_dictionaries = query_articles("tapas", language_dict["Spanish"])
+    # get_article_names_from_query(article_dictionaries)
 
-    get_search_suggestion("asdf Einstein!", language_dict["English"])
+    # get_search_suggestion("asdf Einstein!", language_dict["English"])
+
+
