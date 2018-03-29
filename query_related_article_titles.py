@@ -5,18 +5,14 @@ import re
 import sys
 from language_dict import language_dict
 
-x = 15
-
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
 
 #To scrape the categories of articles that fall within the user's query
-base_category_query_url =
-"w/api.php?action=query&format=json&prop=categories&cllimit=max&cldir=ascending&titles="
+base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cllimit=max&cldir=ascending&titles="
 
 #To scrape the most recent categry members from related categories to the user's query
 #NOTE: currently capped at 20 related members max
-base_related_query_url =
-"https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmsort=timestamp&cmdir=desc&cmprop=type|id|title|timestamp&cmlimit=20&cmtitle="
+base_related_query_url ="https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmsort=timestamp&cmdir=desc&cmprop=type|id|title|timestamp&cmlimit=20&cmtitle="
 
 #Example of a query for the categories of Albert Einstein
 #"api.php?action=query&prop=categories&titles=Albert%20Einstein"
@@ -85,11 +81,16 @@ def get_article_categories_from_query(article_titles_list, language_code):
     for title in article_titles_list:
         data = get_data(title, language_code, base_category_query_url)
 
+        #print(data["query"]["pages"]["-1"].keys())
+
         for page in data["query"]["pages"]:
 
-            for category in page["categories"]:
+            if "categories" not in data["query"]["pages"][page].keys():
+                break
 
-                if category["title"] not in category_results:
+            for category in data["query"]["pages"][page]["categories"]:
+
+                if category["title"] not in category_titles_list:
                     category_titles_list += [category["title"]]
 
     return category_titles_list
@@ -98,7 +99,7 @@ def get_article_categories_from_query(article_titles_list, language_code):
 #Example:
 #    Input: ["Presidents"], "English"
 #    Output: ["President", "President of the Continental Congress", "President of the Senate"]
-def get_articles_from_categories(category_titles_list, language code):
+def get_articles_from_categories(category_titles_list, language_code):
 
     related_article_titles = []
     for category in category_results:
@@ -168,7 +169,11 @@ def suggestion_exists(json_data):
 if __name__ == "__main__":
 
     # query_articles("ARTICLE NAME", "LANGUAGE")
-    article_dictionaries = query_articles("tapas", language_dict["Spanish"])
-    get_article_names_from_query(article_dictionaries)
+    #article_dictionaries = query_articles("tapas", language_dict["Spanish"])
+    #get_article_names_from_query(article_dictionaries)
 
-    get_search_suggestion("asdf Einstein!", language_dict["English"])
+    #get_search_suggestion("asdf Einstein!", language_dict["English"])
+
+    titles = query_related_articles_titles("President", language_dict["English"])
+
+    categories = get_article_categories_from_query(titles, language_dict["English"])
