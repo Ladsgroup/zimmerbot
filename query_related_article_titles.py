@@ -5,6 +5,8 @@ import re
 import sys
 from language_dict import language_dict
 
+x = 15
+
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
 
 #To scrape the categories of articles that fall within the user's query
