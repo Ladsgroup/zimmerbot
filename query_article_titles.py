@@ -281,10 +281,10 @@ def query_linked_articles(article_title, language_code):
         print (article_title + " is not a valid Wikipedia article")
         return None
     all_links = (list(limited_data["query"]["pages"].values())[0])["links"] #extracting just the list of links from the data
-    while "continue" in limited_data.keys():
+    while "continue" in limited_data.keys(): #obtaining all links (iterating through requests of 500)
         limited_data = get_linked_articles(article_title, language_code, limited_data["continue"]["plcontinue"])
         links_in_limited_data = (list(limited_data["query"]["pages"].values())[0] )["links"]
-        all_links += links_in_limited_data
+        all_links += links_in_limited_data #updating all_links
     
     for e in all_links:
         if e["ns"] == 0: #if element is an article (and not a category, template, help page, etc.)
@@ -294,7 +294,7 @@ def query_linked_articles(article_title, language_code):
 def get_linked_articles(article_title, language_code, continue_key):
     article_title = re.sub("\s", "%20", article_title)
     if continue_key == None:
-        url = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + article_title + "&redirects=1&pllimit=2"
+        url = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + article_title + "&redirects=1&pllimit=500"
     else:
         continue_key = re.sub("\|", "%7C", continue_key)
         url = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + article_title + "&redirects=1&pllimit=500&plcontinue=" + continue_key
