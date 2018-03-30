@@ -207,9 +207,6 @@ def get_articles_in_category(category, language_code, limit):
             article_id_title_dict["pageid"] = e["pageid"]
             if len(article_id_title_dict) >= limit:
                 return article_id_title_dict
-    # print("CATEGORY: ", category)
-    # print ("ARTICLE LENGTH: ", len(article_id_title_dict))
-    # print ("SUBCAT LENGTH: ", len(subcategories))
     
     if len(article_id_title_dict) >= limit:
         return article_id_title_dict
@@ -219,7 +216,6 @@ def get_articles_in_category(category, language_code, limit):
             remaining_limit = limit - len(article_id_title_dict)
             article_id_title_dict.update(get_articles_in_category(subcat, language_code, remaining_limit))
 
-    #print ("=====returning=====")
     return article_id_title_dict
 
 #Helper for get_articles_in_category(): returns a JSON object of categorymembers (articles in CATEGORY)
@@ -248,7 +244,7 @@ def query_categories(category, language_code):
 #Helper for query_categories(): returns a JSON object of categories with prefix CATEGORY
 def get_categories(category, language_code):
     category = re.sub("\s", "%20", category)
-    url = "http://en.wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
+    url = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=allcategories&aclimit=500&acprefix=" + category
     with urllib.request.urlopen(url) as url:
         data = json.loads(url.read().decode())
         return data
@@ -272,6 +268,39 @@ def get_sub_categories(category, language_code):
                 stack.append(member["title"][9:]) #[9:] to remove the leading "Category:" in the category name
     return subcategories
 
+
+#######################
+#QUERY LINKED ARTICLES#
+#######################
+
+#NOTE: QUERY must be a valid Wikipedia article title
+def query_linked_articles(article_title, language_code):
+    result = []
+    limited_data = get_linked_articles(article_title, language_code, None)
+    if "-1" in limited_data["query"]["pages"]: #Note: -1 denotes an invalid pageID
+        print (article_title + " is not a valid Wikipedia article")
+        return None
+    all_links = (list(limited_data["query"]["pages"].values())[0])["links"] #extracting just the list of links from the data
+    while "continue" in limited_data.keys(): #obtaining all links (iterating through requests of 500)
+        limited_data = get_linked_articles(article_title, language_code, limited_data["continue"]["plcontinue"])
+        links_in_limited_data = (list(limited_data["query"]["pages"].values())[0] )["links"]
+        all_links += links_in_limited_data #updating all_links
+    
+    for e in all_links:
+        if e["ns"] == 0: #if element is an article (and not a category, template, help page, etc.)
+            result += [{"title" : e["title"]}] 
+    return result
+
+def get_linked_articles(article_title, language_code, continue_key):
+    article_title = re.sub("\s", "%20", article_title)
+    if continue_key == None:
+        url = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + article_title + "&redirects=1&pllimit=500"
+    else:
+        continue_key = re.sub("\|", "%7C", continue_key)
+        url = "https://" + language_code + ".wikipedia.org/w/api.php?action=query&format=json&prop=links&titles=" + article_title + "&redirects=1&pllimit=500&plcontinue=" + continue_key
+    with urllib.request.urlopen(url) as url:
+        data = json.loads(url.read().decode())
+        return data
 
 
 
