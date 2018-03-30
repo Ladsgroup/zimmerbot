@@ -22,8 +22,10 @@ def main(method, query, language_code, filter_method, limit, stub):
         sys.exit(0)
     elif method == "linked":
         #todo
-        print("linked to method not implemented yet")
-        sys.exit(0)
+        article_dictionaries = query_linked_articles(query, language_code)[:limit+20]
+        if article_dictionaries == None:
+            print (article_title + " is not a valid Wikipedia article")
+            sys.exit(0)
     else:
         print("Invalid search method. Please choose individual_articles, categories, related_articles, linked_to_articles")
         sys.exit(0)
