@@ -13,7 +13,7 @@ base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cl
 
 #To scrape the most recent categry members from related categories to the user's query
 #NOTE: currently capped at 20 related members max
-base_related_query_url ="w/api.php?action=query&list=categorymembers&cmsort=timestamp&cmdir=desc&cmprop=type|title|timestamp&cmlimit=10&cmtitle="
+base_related_query_url ="w/api.php?action=query&list=categorymembers&format=json&cmsort=timestamp&cmdir=desc&cmprop=type|title|timestamp&cmlimit=10&cmtitle="
 
 #Example of a query for the categories of Albert Einstein
 #"api.php?action=query&prop=categories&titles=Albert%20Einstein"
@@ -94,7 +94,7 @@ def get_article_categories_from_query(article_titles_list, language_code):
                     category_titles_list += [category["title"]]
 
 
-    return get_articles_from_categories_keyword(category_titles_list, language_code)
+    return get_articles_from_categories_catmem(category_titles_list, language_code)
 
 #return a list of recent article page titles for each category from a list of categories
 #Example:
@@ -111,6 +111,8 @@ def get_articles_from_categories_catmem(category_titles_list, language_code):
                 dummy_dict = {"title" : member["title"]}
                 related_article_titles += [dummy_dict]
 
+
+    shuffle(related_article_titles)
     return related_article_titles
 
 def get_articles_from_categories_keyword(category_titles_list, language_code):
@@ -128,7 +130,6 @@ def get_articles_from_categories_keyword(category_titles_list, language_code):
             result += [e]
 
     shuffle(result)
-
     return result
 
 # Returns the Page objects from a query

@@ -8,6 +8,15 @@ import sqlite3
 import random
 
 
+keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=5&srsearch="
+
+#To scrape the categories of articles that fall within the user's query
+base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cllimit=5&cldir=ascending&titles="
+
+#To scrape the most recent categry members from related categories to the user's query
+#NOTE: currently capped at 20 related members max
+base_related_query_url ="w/api.php?action=query&list=categorymembers&format=json&cmsort=timestamp&cmdir=desc&cmprop=type|title|timestamp&cmlimit=10&cmtitle="
+
 #Create languages dictionary from "list_of_wiki_languages.txt"
 # def generate_language_dict():
 #     with open("list_of_wiki_languages.txt", "r") as file:
@@ -172,7 +181,7 @@ def get_article_categories_from_query(article_titles_list, language_code):
                     category_titles_list += [category["title"]]
 
 
-    return get_articles_from_categories_keyword(category_titles_list, language_code)
+    return get_articles_from_categories_catmem(category_titles_list, language_code)
 
 #return a list of recent article page titles for each category from a list of categories
 #Example:
@@ -189,6 +198,8 @@ def get_articles_from_categories_catmem(category_titles_list, language_code):
                 dummy_dict = {"title" : member["title"]}
                 related_article_titles += [dummy_dict]
 
+
+    random.shuffle(related_article_titles)
     return related_article_titles
 
 def get_articles_from_categories_keyword(category_titles_list, language_code):
@@ -205,6 +216,7 @@ def get_articles_from_categories_keyword(category_titles_list, language_code):
             e.pop("wordcount", None)
             result += [e]
 
+    random.shuffle(result)
     return result
 
 ##################
