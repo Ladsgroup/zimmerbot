@@ -11,7 +11,7 @@ import random
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=5&srsearch="
 
 #To scrape the categories of articles that fall within the user's query
-base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cllimit=5&cldir=ascending&titles="
+base_category_query_url = "w/api.php?action=query&clshow=!hidden&format=json&prop=categories&cllimit=5&cldir=ascending&titles="
 
 #To scrape the most recent categry members from related categories to the user's query
 #NOTE: currently capped at 20 related members max
