@@ -97,7 +97,7 @@ def get_search_suggestion(search_item, language_code):
 #             article_id_title_dict = articles_of_categories_dict[category]
 #         else:
 #             limit = 200 #Can change the limit
-#             article_id_title_dict = get_articles_in_category(category, language_code, limit) 
+#             article_id_title_dict = get_articles_in_category(category, language_code, limit)
 #             articles_of_categories_dict.update({category: article_id_title_dict})
 #             serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
 #         for e in data["query"]["search"]:
@@ -113,7 +113,7 @@ def get_search_suggestion(search_item, language_code):
 #             e.pop("size", None)
 #             e.pop("timestamp", None)
 #             result += [e]
-    
+
 #     if not result:
 #         print("Please try another search query.")
 #         if suggestion_exists(data):
@@ -121,6 +121,91 @@ def get_search_suggestion(search_item, language_code):
 
 #     return result
 
+
+def query_related_articles_titles(search_item, language_code):
+    data = get_data(search_item, language_code, keyword_base_url)
+    result = []
+    for e in data["query"]["search"]:
+        #remove unwanted dictionary keys
+        e.pop("ns", None)
+        e.pop("size", None)
+        e.pop("timestamp", None)
+        result += [e]
+
+    if not result:
+        print("Please try another search query.")
+        if suggestion_exists(data):
+            print("Suggestion: " + get_search_suggestion(search_item, language_code))
+
+    result_titles = []
+
+    for article in result:
+        result_titles += [article["title"]]
+
+    return get_article_categories_from_query(result_titles, language_code)
+
+#Returns the categories of a list of pages
+#Example:
+#    Input: ["Abraham"], "English"
+#    Output:
+#        [
+#         "Category:Abraham", "Category:Angelic visionaries", "Category:Biblical patriarchs",
+#         "Category:Christian saints from the  Old Testament", "Category:Founders of religions", "Category:Lech-Lecha",
+#         "Category:Prophets of Islam", "Category:Prophets of the Hebrew Bible", "Category:Use dmy dates from April 2012",
+#         "Category:Vayeira"
+#        ]
+def get_article_categories_from_query(article_titles_list, language_code):
+    category_titles_list = []
+
+    for title in article_titles_list:
+        data = get_data_related_articles(title, language_code, base_category_query_url)
+
+        #print(data["query"]["pages"])
+
+        for page in data["query"]["pages"]:
+
+            if "categories" not in data["query"]["pages"][page].keys():
+                break
+
+            for category in data["query"]["pages"][page]["categories"]:
+                if category["title"] not in category_titles_list:
+                    category_titles_list += [category["title"]]
+
+
+    return get_articles_from_categories_keyword(category_titles_list, language_code)
+
+#return a list of recent article page titles for each category from a list of categories
+#Example:
+#    Input: ["Presidents"], "English"
+#    Output: ["President", "President of the Continental Congress", "President of the Senate"]
+def get_articles_from_categories_catmem(category_titles_list, language_code):
+
+    related_article_titles = []
+    for category in category_titles_list:
+        data = get_data_related_articles(category, language_code, base_related_query_url)
+
+        for member in data["query"]["categorymembers"]:
+            if member["type"] == "page":
+                dummy_dict = {"title" : member["title"]}
+                related_article_titles += [dummy_dict]
+
+    return related_article_titles
+
+def get_articles_from_categories_keyword(category_titles_list, language_code):
+
+    result = []
+    for category in category_titles_list:
+        data = get_data(category[10:], language_code, keyword_base_url)
+
+        for e in data["query"]["search"]:
+            e.pop("ns", None)
+            e.pop("size", None)
+            e.pop("timestamp", None)
+            e.pop("snippet", None)
+            e.pop("wordcount", None)
+            result += [e]
+
+    return result
 
 ##################
 #HELPER FUNCTIONS#
@@ -210,7 +295,7 @@ def get_articles_in_category(category, language_code, limit):
     # print("CATEGORY: ", category)
     # print ("ARTICLE LENGTH: ", len(article_id_title_dict))
     # print ("SUBCAT LENGTH: ", len(subcategories))
-    
+
     if len(article_id_title_dict) >= limit:
         return article_id_title_dict
     else:
@@ -232,7 +317,7 @@ def get_category_members(category, language_code, limit):
 def build_category_members_url(category, language_code, limit):
     #site = pywikibot.getSite(language_code)
     category = re.sub("\s", "%20", category)
-    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=" + str(limit) + "&cmtitle=Category:" + category 
+    result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=" + str(limit) + "&cmtitle=Category:" + category
     return result
 
 
@@ -272,7 +357,20 @@ def get_sub_categories(category, language_code):
                 stack.append(member["title"][9:]) #[9:] to remove the leading "Category:" in the category name
     return subcategories
 
+def get_data_related_articles(search_item, language_code, base_url):
+    with urllib.request.urlopen(build_url_related_articles(search_item, language_code, base_url)) as url:
+        data = json.loads(url.read().decode())
+        return data
 
+def build_url_related_articles(search_item, language_code, base_url):
+    site = pywikibot.getSite(language_code)
+    wiki_language_url = language_code + ".wikipedia.org/"
+
+    url_search_extension = re.sub("\s", "%20", search_item.strip())
+
+    result = "https://" + wiki_language_url + base_url + url_search_extension
+
+    return result
 
 
 
@@ -293,5 +391,3 @@ if __name__ == "__main__":
     # get_article_names_from_query(article_dictionaries)
 
     # get_search_suggestion("asdf Einstein!", language_dict["English"])
-
-

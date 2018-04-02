@@ -17,7 +17,7 @@ def main(method, query, language_code, filter_method, limit, stub):
     elif method == "category":
         article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
     elif method == "related":
-        #todo
+        article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]
     elif method == "linked":
         #todo
 

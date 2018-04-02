@@ -63,7 +63,7 @@ def query_related_articles_titles(search_item, language_code):
     for article in result:
         result_titles += [article["title"]]
 
-    return result_titles
+    return get_article_categories_from_query(result_titles, language_code)
 
 #Returns the categories of a list of pages
 #Example:
@@ -93,7 +93,7 @@ def get_article_categories_from_query(article_titles_list, language_code):
                     category_titles_list += [category["title"]]
 
 
-    return category_titles_list
+    return get_articles_from_categories_keyword(category_titles_list, language_code)
 
 #return a list of recent article page titles for each category from a list of categories
 #Example:
@@ -185,7 +185,7 @@ def build_url_related_articles(search_item, language_code, base_url):
     url_search_extension = re.sub("\s", "%20", search_item.strip())
 
     result = "https://" + wiki_language_url + base_url + url_search_extension
-    print(result)
+
     return result
 
 #returns True/False depending if there is a search replacement suggestion for the user's search
