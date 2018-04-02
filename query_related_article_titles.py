@@ -3,6 +3,7 @@ import requests
 import json, urllib
 import re
 import sys
+from random import shuffle
 from language_dict import language_dict
 
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=5&srsearch="
@@ -126,6 +127,8 @@ def get_articles_from_categories_keyword(category_titles_list, language_code):
             e.pop("wordcount", None)
             result += [e]
 
+    shuffle(result)
+
     return result
 
 # Returns the Page objects from a query
@@ -208,12 +211,13 @@ if __name__ == "__main__":
 
     titles = query_related_articles_titles("Donald Trump", language_dict["English"])
 
-    categories = get_article_categories_from_query(titles, language_dict["English"])
+    #categories = get_article_categories_from_query(titles, language_dict["English"])
 
-    print('here')
+    for _ in titles[:10]:
+        print(_["title"])
 
     #categories = categories[2:]
 
-    results = get_articles_from_categories_keyword(categories, language_dict["English"])
+    #results = get_articles_from_categories_keyword(categories, language_dict["English"])
 
-    print(results)
+    #print(results)
