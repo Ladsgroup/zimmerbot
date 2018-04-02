@@ -5,14 +5,14 @@ import re
 import sys
 from language_dict import language_dict
 
-keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=500&srsearch="
+keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=10&srsearch="
 
 #To scrape the categories of articles that fall within the user's query
-base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cllimit=max&cldir=ascending&titles="
+base_category_query_url = "w/api.php?action=query&format=json&prop=categories&cllimit=20&cldir=ascending&titles="
 
 #To scrape the most recent categry members from related categories to the user's query
 #NOTE: currently capped at 20 related members max
-base_related_query_url ="https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmsort=timestamp&cmdir=desc&cmprop=type|id|title|timestamp&cmlimit=20&cmtitle="
+base_related_query_url ="w/api.php?action=query&list=categorymembers&cmsort=timestamp&cmdir=desc&cmprop=type|id|title|timestamp&cmlimit=20&cmtitle="
 
 #Example of a query for the categories of Albert Einstein
 #"api.php?action=query&prop=categories&titles=Albert%20Einstein"
@@ -79,9 +79,9 @@ def get_article_categories_from_query(article_titles_list, language_code):
     category_titles_list = []
 
     for title in article_titles_list:
-        data = get_data(title, language_code, base_category_query_url)
+        data = get_data_related_articles(title, language_code, base_category_query_url)
 
-        #print(data["query"]["pages"]["-1"].keys())
+        #print(data["query"]["pages"])
 
         for page in data["query"]["pages"]:
 
@@ -89,9 +89,9 @@ def get_article_categories_from_query(article_titles_list, language_code):
                 break
 
             for category in data["query"]["pages"][page]["categories"]:
-
                 if category["title"] not in category_titles_list:
                     category_titles_list += [category["title"]]
+
 
     return category_titles_list
 
@@ -107,7 +107,8 @@ def get_articles_from_categories(category_titles_list, language_code):
 
         for member in data["query"]["categorymembers"]:
             if member["type"] == "page":
-                related_article_titles += [member["title"]]
+                dummy_dict = {"title" : member["title"]}
+                related_article_titles += [dummy_dict]
 
     return related_article_titles
 
@@ -146,12 +147,26 @@ def get_data(search_item, language_code, base_url):
         data = json.loads(url.read().decode())
         return data
 
+def get_data_related_articles(search_item, language_code, base_url):
+    with urllib.request.urlopen(build_url_related_articles(search_item, language_code, base_url)) as url:
+        data = json.loads(url.read().decode())
+        return data
+
 #Builds the json request URL
 def build_url(search_item, language_code, base_url):
     site = pywikibot.getSite(language_code)
     wiki_language_url = language_code + ".wikipedia.org/"
 
     url_search_extension = re.sub("\s", "%", search_item.strip())
+
+    result = "https://" + wiki_language_url + base_url + url_search_extension
+    return result
+
+def build_url_related_articles(search_item, language_code, base_url):
+    site = pywikibot.getSite(language_code)
+    wiki_language_url = language_code + ".wikipedia.org/"
+
+    url_search_extension = re.sub("\s", "%20", search_item.strip())
 
     result = "https://" + wiki_language_url + base_url + url_search_extension
     return result
@@ -174,6 +189,9 @@ if __name__ == "__main__":
 
     #get_search_suggestion("asdf Einstein!", language_dict["English"])
 
-    titles = query_related_articles_titles("President", language_dict["English"])
+    titles = query_related_articles_titles("Donald Trump", language_dict["English"])
 
     categories = get_article_categories_from_query(titles, language_dict["English"])
+
+    for _ in categories:
+        print(_)
