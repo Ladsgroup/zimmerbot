@@ -6,6 +6,7 @@ import sys
 from language_dict import language_dict
 import sqlite3
 import random
+import datetime
 
 
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=5&srsearch="
@@ -199,6 +200,8 @@ def get_articles_from_categories_catmem(category_titles_list, language_code):
                 related_article_titles += [dummy_dict]
 
 
+    now = datetime.datetime.now()
+    random.seed(now.day)
     random.shuffle(related_article_titles)
     return related_article_titles
 
@@ -216,7 +219,9 @@ def get_articles_from_categories_keyword(category_titles_list, language_code):
             e.pop("wordcount", None)
             result += [e]
 
-    random.shuffle(result)
+    now = datetime.datetime.now()
+    random.seed(now.day)
+    random.shuffle(related_article_titles)
     return result
 
 ##################

@@ -3,8 +3,9 @@ import requests
 import json, urllib
 import re
 import sys
-from random import shuffle
+import random
 from language_dict import language_dict
+import datetime
 
 keyword_base_url = "w/api.php?action=query&format=json&list=search&srlimit=5&srsearch="
 
@@ -112,7 +113,9 @@ def get_articles_from_categories_catmem(category_titles_list, language_code):
                 related_article_titles += [dummy_dict]
 
 
-    shuffle(related_article_titles)
+    now = datetime.datetime.now()
+    random.seed(now.day)
+    random.shuffle(related_article_titles)
     return related_article_titles
 
 def get_articles_from_categories_keyword(category_titles_list, language_code):
@@ -129,7 +132,7 @@ def get_articles_from_categories_keyword(category_titles_list, language_code):
             e.pop("wordcount", None)
             result += [e]
 
-    shuffle(result)
+    random.shuffle(result)
     return result
 
 # Returns the Page objects from a query
