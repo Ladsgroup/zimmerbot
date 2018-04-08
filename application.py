@@ -11,7 +11,7 @@ CORS(application)
 @application.route("/", methods=["GET", "POST"])
 def get_links():
     if request.method == "GET":
-        list_of_links = main("dog", "en", "popularity", "10", "include")
+        list_of_links = main("individual", "dog", "en", "popularity", "10", "exclude")
     else:
         print(request.data)
         data = request.data
@@ -40,4 +40,6 @@ if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     # app.debug = True
+
+    #app.run(host='127.0.0.1', port=80)
     application.run()
