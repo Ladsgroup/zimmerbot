@@ -17,9 +17,10 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     elif method == "category":
         article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
     elif method == "related":
-        #todo
-        print("related method not implemented yet")
-        sys.exit(0)
+
+        article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]
+        
+        
     elif method == "linked":
         #todo
         article_dictionaries = query_linked_articles(query, language_code)[:limit+20]
