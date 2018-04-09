@@ -107,7 +107,9 @@ def get_search_suggestion(search_item, language_code):
 #             article_id_title_dict = articles_of_categories_dict[category]
 #         else:
 #             limit = 200 #Can change the limit
+
 #             article_id_title_dict = get_articles_in_category(category, language_code, limit)
+
 #             articles_of_categories_dict.update({category: article_id_title_dict})
 #             serialize_dictionary(articles_of_categories_dict, "articles_of_categories.pickle")
 #         for e in data["query"]["search"]:
@@ -123,7 +125,6 @@ def get_search_suggestion(search_item, language_code):
 #             e.pop("size", None)
 #             e.pop("timestamp", None)
 #             result += [e]
-
 #     if not result:
 #         print("Please try another search query.")
 #         if suggestion_exists(data):
@@ -309,14 +310,11 @@ def get_articles_in_category(category, language_code, limit):
             article_id_title_dict["pageid"] = e["pageid"]
             if len(article_id_title_dict) >= limit:
                 return article_id_title_dict
-<<<<<<< HEAD
+
     # print("CATEGORY: ", category)
     # print ("ARTICLE LENGTH: ", len(article_id_title_dict))
     # print ("SUBCAT LENGTH: ", len(subcategories))
 
-=======
-
->>>>>>> 977a7fd960fce43b64517e0481cfd9db5f116c9b
     if len(article_id_title_dict) >= limit:
         return article_id_title_dict
     else:
@@ -337,7 +335,9 @@ def get_category_members(category, language_code, limit):
 def build_category_members_url(category, language_code, limit):
     #site = pywikibot.getSite(language_code)
     category = re.sub("\s", "%20", category)
+
     result = "https://" + language_code + ".wikipedia.org/w/api.php?format=json&action=query&list=categorymembers&cmprop=ids|title|type&cmlimit=" + str(limit) + "&cmtitle=Category:" + category
+
     return result
 
 
@@ -382,7 +382,6 @@ def get_data_related_articles(search_item, language_code, base_url):
         data = json.loads(url.read().decode())
         return data
 
-<<<<<<< HEAD
 def build_url_related_articles(search_item, language_code, base_url):
     site = pywikibot.getSite(language_code)
     wiki_language_url = language_code + ".wikipedia.org/"
@@ -392,7 +391,6 @@ def build_url_related_articles(search_item, language_code, base_url):
     result = "https://" + wiki_language_url + base_url + url_search_extension
 
     return result
-=======
 #######################
 #QUERY LINKED ARTICLES#
 #######################
@@ -426,7 +424,6 @@ def get_linked_articles(article_title, language_code, continue_key):
         data = json.loads(url.read().decode())
         return data
 
->>>>>>> 977a7fd960fce43b64517e0481cfd9db5f116c9b
 
 
 
@@ -447,3 +444,4 @@ if __name__ == "__main__":
     # get_article_names_from_query(article_dictionaries)
 
     # get_search_suggestion("asdf Einstein!", language_dict["English"])
+
