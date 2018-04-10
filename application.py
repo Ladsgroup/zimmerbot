@@ -11,9 +11,8 @@ CORS(application)
 @application.route("/", methods=["GET", "POST"])
 def get_links():
     if request.method == "GET":
-        list_of_links = main("individual", "dog", "en", "popularity", "10", "exclude")
+        list_of_links = main("category", "people", "en", "popularity", "20", "exclude")
     else:
-        print(request.data)
         data = request.data
         if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
             return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
@@ -34,12 +33,11 @@ def get_categories():
         return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_categories
 
-
 # run the app.
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
-    # app.debug = True
+    #app.debug = True
 
     #app.run(host='127.0.0.1', port=80)
     application.run()

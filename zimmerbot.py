@@ -11,28 +11,24 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     # For now, we only support limiting by number of articles, not total package size
     limit = min(int(limit), 500)
 
+    # article_dictionaries is a list of dictionaries
     if method == "individual":
-        # Get the query results (list of dictionaries)
         article_dictionaries = query_articles(query, language_code)[:limit+20]
     elif method == "category":
-        article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
+        print("category")
+        article_dictionaries = get_articles_in_category(query, language_code, limit)
     elif method == "related":
-
         article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]
-        
-        
     elif method == "linked":
-        #todo
         article_dictionaries = query_linked_articles(query, language_code)[:limit+20]
         if article_dictionaries == None:
-            print (query + " is not a valid Wikipedia article")
+            print(query + " is not a valid Wikipedia article")
             sys.exit(0)
     else:
         print("Invalid search method. Please choose individual_articles, categories, related_articles, linked_to_articles")
         sys.exit(0)
 
-
-    # List of article titles
+    # list of strings
     article_names = get_article_names_from_query(article_dictionaries)
 
     if filter_method == "ores_quality" or stub == "exclude":
@@ -44,7 +40,8 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
             article_names = [name for name in article_names if name in scaled_ores_rating_results]
 
     # Dictionary of page objects with article names as keys
-    articles = get_articles_from_names(article_names, language_code) # {"title: page_object"}
+    articles = get_articles_from_names(article_names, language_code) # {"name: page_object"}
+
     # Initialize empty dictionary of article ratings hashed by article name/title
     article_ratings = {} # {"title: numerical_article_score"}
 
