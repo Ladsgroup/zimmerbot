@@ -15,7 +15,6 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     if method == "individual":
         article_dictionaries = query_articles(query, language_code)[:limit+20]
     elif method == "category":
-        print("category")
         article_dictionaries = get_articles_in_category(query, language_code, limit)
     elif method == "related":
         article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]

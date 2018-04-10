@@ -16,9 +16,7 @@ def get_links():
         data = request.data
         if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
             return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
-        
         list_of_links = main(data["method"], data["query"], data["language"], data["filter"], data["limit"], data["stub"])
-
         if not list_of_links:
             return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_links

@@ -132,10 +132,7 @@ def get_article_categories_from_query(article_titles_list, language_code):
     for title in article_titles_list:
         data = get_data_related_articles(title, language_code, base_category_query_url)
 
-        #print(data["query"]["pages"])
-
         for page in data["query"]["pages"]:
-
             if "categories" not in data["query"]["pages"][page].keys():
                 break
 
@@ -314,7 +311,6 @@ def get_categories(category, language_code):
 def get_sub_categories(category, language_code):
     subcategories, stack = [], []
     stack.append(category)
-    print(category)
     while stack and len(subcategories) < 50: #if stack is empty
         curr_category = stack.pop()
         try:
@@ -322,7 +318,6 @@ def get_sub_categories(category, language_code):
         except:
             continue
         subcategories += [curr_category]
-        print (curr_category)
         category_members = get_category_members(curr_category, language_code) #returns a JSON of the data
         for member in category_members["query"]["categorymembers"]:
             if member["type"] == "subcat":
@@ -392,5 +387,4 @@ if __name__ == "__main__":
     #query_articles("ARTICLE NAME", "LANGUAGE")
     # article_dictionaries = query_articles("tapas", language_dict["Spanish"])
     # get_article_names_from_query(article_dictionaries)
-
     # get_search_suggestion("asdf Einstein!", language_dict["English"])
