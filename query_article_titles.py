@@ -95,7 +95,7 @@ def get_search_suggestion(search_item, language_code):
         return None
 
 def query_related_articles_titles(search_item, language_code):
-    data = get_data(search_item, language_code, keyword_base_url)
+    data = get_data_related_articles(search_item, language_code, keyword_base_url)
     result = []
     for e in data["query"]["search"]:
         #remove unwanted dictionary keys

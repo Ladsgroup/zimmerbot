@@ -16,11 +16,11 @@ from language_dict import language_dict
 def count_backlinks(article_name, language_code):
     site = pywikibot.getSite(language_code)
     backlinks = getlinks(site, article_name)
-    print(article_name)
+    #print(article_name)
     linked_to_count = 0
     for backlink in backlinks:
         linked_to_count += 1
-    print(str(linked_to_count) + " articles link to " + article_name + "\n")
+    #print(str(linked_to_count) + " articles link to " + article_name + "\n")
 
     return linked_to_count
 

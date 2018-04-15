@@ -2,6 +2,7 @@ from flask import request, url_for
 from flask_api import FlaskAPI, status, exceptions
 from flask_cors import CORS
 from zimmerbot import *
+from test_suite import *
 from category_autocomplete import *
 
 
@@ -11,14 +12,18 @@ CORS(application)
 @application.route("/", methods=["GET", "POST"])
 def get_links():
     if request.method == "GET":
-        list_of_links = main("category", "people", "en", "popularity", "20", "exclude")
+        list_of_links = main("related", "people", "en", "ores_quality", "10", "include")
     else:
         data = request.data
-        if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
-            return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
-        list_of_links = main(data["method"], data["query"], data["language"], data["filter"], data["limit"], data["stub"])
-        if not list_of_links:
-            return ["No search results found for this query"], status.HTTP_202_ACCEPTED
+        if len(data) == 0:
+            basic_functionality_test()
+            list_of_links = []
+        else:
+            if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
+                return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
+            list_of_links = main(data["method"], data["query"], data["language"], data["filter"], data["limit"], data["stub"])
+            if not list_of_links:
+                return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_links
 
 @application.route("/category-autocomplete", methods=["GET", "POST"])
