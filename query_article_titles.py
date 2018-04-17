@@ -134,7 +134,8 @@ def get_search_suggestion(search_item, language_code):
 
 
 def query_related_articles_titles(search_item, language_code):
-    data = get_data(search_item, language_code, keyword_base_url)
+    print(111111111111111111111111111111111111111111111111111111111)
+    data = get_data_related_articles(search_item, language_code, keyword_base_url)
     result = []
     for e in data["query"]["search"]:
         #remove unwanted dictionary keys
@@ -167,8 +168,10 @@ def query_related_articles_titles(search_item, language_code):
 #        ]
 def get_article_categories_from_query(article_titles_list, language_code):
     category_titles_list = []
+    print(2222222222222222222222222222222222222222222222222222222)
 
     for title in article_titles_list:
+        print(33333333333333333333333333333333333333333333333333333333333)
         data = get_data_related_articles(title, language_code, base_category_query_url)
 
         #print(data["query"]["pages"])
@@ -190,12 +193,14 @@ def get_article_categories_from_query(article_titles_list, language_code):
 #    Input: ["Presidents"], "English"
 #    Output: ["President", "President of the Continental Congress", "President of the Senate"]
 def get_articles_from_categories_catmem(category_titles_list, language_code):
-
+    print("ya ya yeet")
     related_article_titles = []
     for category in category_titles_list:
+        print(44444444444444444444444)
         data = get_data_related_articles(category, language_code, base_related_query_url)
 
         for member in data["query"]["categorymembers"]:
+            print(55555555555555555555555555555555)
             if member["type"] == "page":
                 dummy_dict = {"title" : member["title"]}
                 related_article_titles += [dummy_dict]
@@ -204,6 +209,7 @@ def get_articles_from_categories_catmem(category_titles_list, language_code):
     now = datetime.datetime.now()
     random.seed(now.day)
     random.shuffle(related_article_titles)
+    print(66666666666666666666666666666)
     return related_article_titles
 
 def get_articles_from_categories_keyword(category_titles_list, language_code):
@@ -444,4 +450,3 @@ if __name__ == "__main__":
     # get_article_names_from_query(article_dictionaries)
 
     # get_search_suggestion("asdf Einstein!", language_dict["English"])
-
