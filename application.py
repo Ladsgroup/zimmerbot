@@ -12,7 +12,7 @@ CORS(application)
 @application.route("/", methods=["GET", "POST"])
 def get_links():
     if request.method == "GET":
-        list_of_links = main("related", "people", "en", "ores_quality", "10", "include")
+        list_of_links = main("related", "dog", "en", "popularity", "10", "exclude")
     else:
         data = request.data
         if len(data) == 0:

@@ -9,13 +9,14 @@ import sys
 def main(method, query, language_code, filter_method, limit, stub="include"):
     # Process script arguments
     # For now, we only support limiting by number of articles, not total package size
-    limit = min(int(limit), 500)
+    
+    #limit = max(min(int(limit), 500), 1)
 
     # article_dictionaries is a list of dictionaries
     if method == "individual":
         article_dictionaries = query_articles(query, language_code)[:limit+20]
     elif method == "category":
-        article_dictionaries = get_articles_in_category(query, language_code, limit)
+        article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
     elif method == "related":
         article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]
     elif method == "linked":
@@ -47,8 +48,12 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     if filter_method == "ores_quality":
             article_ratings = scaled_ores_rating_results
     elif filter_method == "popularity":
-        for article in articles:
-            article_ratings[article] = get_page_view(article, language_code)
+        for k in list(articles.keys()):
+            pageview = get_page_view(k, language_code)
+            if pageview != -1:
+                article_ratings[k] = pageview
+            else:
+                articles.pop(k)
     elif filter_method == "most_linked_to":
         for article in articles:
             article_ratings[article] = count_backlinks(article, language_code)
@@ -70,4 +75,5 @@ if __name__ == "__main__":
     language = language_dict[input("Please enter a language: ").capitalize()]
     filter_method = input("Please enter the filtering method: ")
     limit = input("Enter a limit no more than 500: ")
-    main(query, language, filter_method, limit)
+    #print(main("category", "query", "language", "filter_method", number, "include"))
+    

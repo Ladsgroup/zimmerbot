@@ -1,4 +1,5 @@
 from zimmerbot import * 
+import time
 
 def basic_functionality_test():
 
@@ -19,12 +20,15 @@ def basic_functionality_test():
                     for e in limits:
                         for f in stubs:
                             try:
-                                main(a, b, c, d, e, f)
-                                print("works: ", a, b, c, d, e, f)
+                                start = time.time()
+                                lst = main(a, b, c, d, e, f)
+                                print(time.time() - start, "pass: ", a, b, c, d, e, f)
                                 total += 1
-                                functional += 1
+                                if len(lst) == limits
+                                    functional += 1
                             except Exception as ex:
-                                print(a, b, c, d, e, f, ex)
+                                total += 1
+                                print(time.time() - start, "fail: ", a, b, c, d, e, f, ex)
 
     print(str(functional), " out of ", str(total), " pass")
 
@@ -46,5 +50,6 @@ def fuzzing_input_test():
 
     print(str(functional), " out of ", str(total), " pass")
 
-
-
+if __name__ == "__main__":
+    
+    basic_functionality_test()

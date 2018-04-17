@@ -46,7 +46,10 @@ ORES_SUPPORTED_WIKIS = {"en": "enwiki",
 def get_ores_assessment(article_names, language_code):
     assert language_code in ORES_SUPPORTED_WIKIS, "ORES not supported in " + language_code
 
-    built_url, rev_ids, = build_ores_url(article_names, language_code)
+    if len(article_names) == 0:
+        return {}
+
+    built_url, rev_ids = build_ores_url(article_names, language_code)
     with urllib.request.urlopen(built_url) as url:
         data = json.loads(url.read().decode())
         all_assessments = get_article_assessments(data)
@@ -62,6 +65,7 @@ def get_ores_assessment(article_names, language_code):
 ##################
 
 # Builds the JSON request URL
+# len(articles_names) > 0
 def build_ores_url(article_names, language_code):
     # Get Wikipedia's revision id for the articles' most recent revision (aka the current version)
     site = pywikibot.getSite(language_code)

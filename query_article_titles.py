@@ -79,6 +79,7 @@ def get_articles_from_names(article_names, language_code):
     site = pywikibot.getSite(language_code)
     for article_name in article_names:
         articles[article_name] = pywikibot.Page(site, article_name)
+        #no way to tell if Page object is invalid
     return articles
 
 #Returns the search replacement suggestion for the user's search

@@ -26,10 +26,13 @@ url = "http://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/"
 
 #Returns the total number of page views over the last 3 months for the page named "article_name"
 def get_page_view(article_name, language_code):
-    with urllib.request.urlopen(build_url(article_name, language_code)) as url:
+    try:
+        url = urllib.request.urlopen(build_url(article_name, language_code))
         data = json.loads(url.read().decode())
         total_views = get_total_views(data)
         return total_views
+    except Exception as ex:
+        return -1
 
 
 ##################
