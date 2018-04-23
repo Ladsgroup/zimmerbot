@@ -10,7 +10,7 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     # Process script arguments
     # For now, we only support limiting by number of articles, not total package size
     
-    limit = max(min(int(limit), 500), 1)
+    # limit = max(min(int(limit), 500), 1)
 
     # article_dictionaries is a list of dictionaries
     if method == "individual":
