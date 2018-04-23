@@ -5,7 +5,7 @@ import re
 import sys
 from language_dict import language_dict
 
-base_url = "w/api.php?action=query&format=json&formatversion=2&list=allcategories&acprefix="
+base_url = "w/api.php?action=query&format=json&formatversion=2&list=allcategories&acmin=1&acprefix="
 #url_example = https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch=life%science%data
 
 ###############
