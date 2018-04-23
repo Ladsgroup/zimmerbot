@@ -20,10 +20,12 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     elif method == "related":
         article_dictionaries = query_related_articles_titles(query, language_code)[:limit+20]
     elif method == "linked":
-        article_dictionaries = query_linked_articles(query, language_code)[:limit+20]
+        article_dictionaries = query_linked_articles(query, language_code)
         if article_dictionaries == None:
             print(query + " is not a valid Wikipedia article")
             sys.exit(0)
+        else:
+            article_dictionaries = article_dictionaries[:limit+20]
     else:
         print("Invalid search method. Please choose individual_articles, categories, related_articles, linked_to_articles")
         sys.exit(0)
@@ -71,9 +73,11 @@ def process_results(sorted_articles):
     return results
 
 if __name__ == "__main__":
-    query = input("Please enter your query: ")
-    language = language_dict[input("Please enter a language: ").capitalize()]
-    filter_method = input("Please enter the filtering method: ")
-    limit = input("Enter a limit no more than 500: ")
+    # query = input("Please enter your query: ")
+    # language = language_dict[input("Please enter a language: ").capitalize()]
+    # filter_method = input("Please enter the filtering method: ")
+    # limit = input("Enter a limit no more than 500: ")
+    lst = main("linked", "Berkeley", "en", "popularity", 10, "exclude")
+    print(lst)
     #print(main("category", "query", "language", "filter_method", number, "include"))
     
