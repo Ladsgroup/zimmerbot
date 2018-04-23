@@ -272,7 +272,7 @@ def get_articles_in_category(category, language_code, limit):
             if len(article_dicts) >= limit:
                 return article_dicts
     for subcat in subcategories:
-        remaining_amt = limit - len(article_dicts)
+        remaining_amt = (limit + 10) - len(article_dicts) # +10 for buffer (10 is a hyperparameter)
         article_dicts.extend(get_articles_in_category(subcat, language_code, remaining_amt))
 
     return article_dicts

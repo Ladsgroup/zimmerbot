@@ -23,6 +23,7 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
         article_dictionaries = query_linked_articles(query, language_code)
         if article_dictionaries == None:
             print(query + " is not a valid Wikipedia article")
+            article_dictionaries = []
             sys.exit(0)
         else:
             article_dictionaries = article_dictionaries[:limit+20]
@@ -77,7 +78,35 @@ if __name__ == "__main__":
     # language = language_dict[input("Please enter a language: ").capitalize()]
     # filter_method = input("Please enter the filtering method: ")
     # limit = input("Enter a limit no more than 500: ")
-    lst = main("linked", "Berkeley", "en", "popularity", 10, "exclude")
-    print(lst)
+    # lst = main("category", "people", "en", "ores_quality", 10, "include")
+    # print("HERE:", lst)
+    # print("LENGTH: ", len(lst))
+    # lst = main("category", "people", "en", "ores_quality", 10, "exclude")
+    # print("----", lst)
+    # print("LENGTH: ", len(lst))
+    # lst = main("category", "people", "en", "popularity", 10, "include")
+    # print("----", lst)
+    # print("LENGTH: ", len(lst))
+    lst = main("linked", "polling trends", "en", "ores_quality", 10, "exclude")
+    print("----", lst)
+    print("LENGTH: ", len(lst))
+
+    # lst = main("individual", "people", "en", "ores_quality", 10, "include")
+    # print("HERE:", lst)
+    # lst = main("individual", "people", "en", "ores_quality", 10, "exclude")
+    # print("----", lst)
+    # lst = main("related", "people", "en", "popularity", 10, "include")
+    # print("----", lst)
+    # lst = main("related", "people", "en", "popularity", 10, "exclude")
+    # print("----", lst)
+
+    # lst = main("category", "sports", "en", "ores_quality", 10, "include")
+    # print("HERE:", lst)
+    # lst = main("category", "sports", "en", "ores_quality", 10, "exclude")
+    # print("----", lst)
+    # lst = main("linked", "Anne Frank", "en", "popularity", 10, "include")
+    # print("----", lst)
+    # lst = main("linked", "Anne Frank", "en", "popularity", 10, "exclude")
+    # print("----", lst)
     #print(main("category", "query", "language", "filter_method", number, "include"))
     

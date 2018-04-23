@@ -13,6 +13,14 @@ def basic_functionality_test():
     total = 0
     functional = 0
 
+    #querying by category
+    valid_categories = ["people", "sports", "animals"] 
+    invalid_categories = ["cat"]
+
+    #querying by linked articles
+    valid_articles = ["Anne Frank", "cat", "people"]
+    invalid_articles = ["Tilden Park"]
+
     for a in methods:
         for b in queries:
             for c in languages:
@@ -25,6 +33,14 @@ def basic_functionality_test():
                                 end = time.time()
                                 total += 1
                                 if len(lst) == e:
+                                    functional += 1
+                                    print(end - start, "pass: ", a, b, c, d, e, f)
+                                elif (a == "category") and (b in invalid_categories) and (len(lst) == 0):
+                                    #A category search for an invalid category should return an empty list []
+                                    functional += 1
+                                    print(end - start, "pass: ", a, b, c, d, e, f)
+                                elif (a == "linked") and (b in invalid_articles) and (len(lst) == 0):
+                                    #A linked article search for an invalid list should return an empty list []
                                     functional += 1
                                     print(end - start, "pass: ", a, b, c, d, e, f)
                                 else:
