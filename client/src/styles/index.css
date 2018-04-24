@@ -1,0 +1,81 @@
+/* Variables */
+:root {
+}
+
+/* Styles */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  font-size: 220%;
+}
+
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#search-button {
+  margin-top: 4.5em;
+}
+
+.searchbar {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.advanced {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3%;
+}
+
+.link-container {
+  justify-content: center;
+}
+
+.links {
+
+  border-radius: 10px;
+  padding: 0;
+  margin: auto;
+  width: 70%;
+  list-style-type: none;
+  background-color: #bfbfbf;
+}
+
+.links li{
+  border-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  display: block;
+  width: 200px;
+ 
+  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+  transition: font-size 0.3s ease, background-color 0.3s ease
+}
+
+.links li:hover {
+  font-size: 20px;
+  background: #BFBFBF;
+}
+
+/*.links li {
+  padding: 0.5em;
+}*/
+
+/* Mobile Styling */
+
+@media all and (max-width: 450px) {
+}
