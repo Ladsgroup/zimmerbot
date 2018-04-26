@@ -3,6 +3,24 @@ from page_popularity import *
 from linked_pages import *
 from ores_assessment import *
 import sys
+import multiprocessing as mp
+import time
+
+def exclude_helper(article_names, scaled_ores_rating_results):
+    ans = []
+    for name in article_names:
+        if name in scaled_ores_rating_results:
+            ans += [name]
+    return ans
+
+def popularity_helper(article_keys, language_code, article_ratings):
+    for k in article_keys:
+            pageview = get_page_view(k, language_code)
+            if pageview != -1:
+                article_ratings[k] = pageview
+            else:
+                articles.pop(k)
+    return article_ratings
 
 # MAIN FUNCTION
 
@@ -13,6 +31,7 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     # limit = max(min(int(limit), 500), 1)
 
     # article_dictionaries is a list of dictionaries
+    start = time.time()
     if method == "individual":
         article_dictionaries = query_articles(query, language_code)[:limit+20]
     elif method == "category":
@@ -30,9 +49,15 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
     else:
         print("Invalid search method. Please choose individual_articles, categories, related_articles, linked_to_articles")
         sys.exit(0)
-
+    end = time.time()
+    print("TIMER1 ", end - start)
     # list of strings
-    article_names = get_article_names_from_query(article_dictionaries)
+    start1 = time.time()
+    #pool_orig = mp.Pool(processes=10)
+    pool_orig = Pool(4)
+    article_names = pool_orig.map(get_article_names_from_query, article_dictionaries)
+    #article_names = pool_orig.apply(get_article_names_from_query, args=(article_dictionaries,))
+    #article_names = get_article_names_from_query(article_dictionaries)
 
     if filter_method == "ores_quality" or stub == "exclude":
         ores_rating_results = get_ores_assessment(article_names, language_code)
@@ -40,23 +65,22 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
         scaled_ores_rating_results = scale_article_assessments(ores_rating_results)
         if stub == "exclude":
             scaled_ores_rating_results = {name : score for name, score in scaled_ores_rating_results.items() if score != 0}
-            article_names = [name for name in article_names if name in scaled_ores_rating_results]
+            pool = mp.Pool(processes=4)
+            article_names = pool.apply(exclude_helper, args=(article_names, scaled_ores_rating_results))
 
     # Dictionary of page objects with article names as keys
     articles = get_articles_from_names(article_names, language_code) # {"name: page_object"}
-
+    end1 = time.time()
+    print("TIMER2 ", end1 - start1)
     # Initialize empty dictionary of article ratings hashed by article name/title
     article_ratings = {} # {"title: numerical_article_score"}
-
+    start2 = time.time()
     if filter_method == "ores_quality":
             article_ratings = scaled_ores_rating_results
     elif filter_method == "popularity":
-        for k in list(articles.keys()):
-            pageview = get_page_view(k, language_code)
-            if pageview != -1:
-                article_ratings[k] = pageview
-            else:
-                articles.pop(k)
+        article_keys = list(articles.keys())
+        pool2 = mp.Pool(processes=4)
+        article_ratings = pool2.apply(popularity_helper, args=(article_keys, language_code, article_ratings))
     elif filter_method == "most_linked_to":
         for article in articles:
             article_ratings[article] = count_backlinks(article, language_code)
@@ -65,6 +89,8 @@ def main(method, query, language_code, filter_method, limit, stub="include"):
         sys.exit(0)
 
     sorted_articles = sorted(articles.items(), key=lambda x: article_ratings[x[0]], reverse=True)
+    end2 = time.time()
+    print("TIMER3 ", end2 - start2)
     return process_results(sorted_articles[:limit])
 
 def process_results(sorted_articles):
@@ -79,7 +105,8 @@ if __name__ == "__main__":
     # filter_method = input("Please enter the filtering method: ")
     # limit = input("Enter a limit no more than 500: ")
     #print(main("category", "query", "language", "filter_method", number, "include"))
-    lst = main("linked", "polling trends", "en", "ores_quality", 10, "exclude")
+    lst = main("individual", "science", "en", "popularity", 10, "exclude")
+    #print("TIMER ",)
     print("----", lst)
     print("LENGTH: ", len(lst))
     
