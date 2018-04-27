@@ -12,7 +12,7 @@ CORS(application)
 @application.route("/", methods=["GET", "POST"])
 def get_links():
     if request.method == "GET":
-        list_of_links = main("related", "dog", "en", "popularity", "10", "exclude")
+        list_of_links = main("related", "dog", "en", "popularity", 10, "exclude")
     else:
         data = request.data
         if len(data) == 0:
@@ -21,7 +21,7 @@ def get_links():
         else:
             if data["filter"] == "ores_quality" and data["language"] not in ["en", "ru", "fr"]:
                 return ["ORES is not supported in this language"], status.HTTP_202_ACCEPTED
-            list_of_links = main(data["method"], data["query"], data["language"], data["filter"], data["limit"], data["stub"])
+            list_of_links = main(data["method"], data["query"], data["language"], data["filter"], int(data["limit"]), data["stub"])
             if not list_of_links:
                 return ["No search results found for this query"], status.HTTP_202_ACCEPTED
     return list_of_links
