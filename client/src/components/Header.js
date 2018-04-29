@@ -15,31 +15,6 @@ class Header extends React.Component {
           <Menu.Item>
             <h1>ZimmerBot</h1>
           </Menu.Item>
-          <Menu.Item
-            header
-            name="home"
-            active={activeItem === 'home'}
-            onClick={this.handleItemClick}
-          >
-            <Icon name="home" />
-          </Menu.Item>
-          <Menu.Item
-            header
-            name="about"
-            active={activeItem === 'about'}
-            onClick={this.handleItemClick}
-          >
-            About Us
-          </Menu.Item>
-          <Menu.Item
-            header
-            header
-            name="libraries"
-            active={activeItem === 'libraries'}
-            onClick={this.handleItemClick}
-          >
-            <Icon name="sidebar" />
-          </Menu.Item>
           <Menu.Item>
             <Image src={wiki_logo} />
           </Menu.Item>

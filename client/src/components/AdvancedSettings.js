@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form } from 'semantic-ui-react';
+import { Form, Popup, Button, Icon } from 'semantic-ui-react';
 
 const search = [
   // { key: 'articles', text: 'Articles', value: 'articles' },
@@ -7,7 +7,8 @@ const search = [
   { key: 'individual', text: 'Articles', value: 'individual' },
   { key: 'category', text: 'Category', value: 'category' },
   { key: 'related', text: 'Related Articles', value: 'related' },
-  { key: 'linked', text: 'Linked', value: 'linked' }
+  { key: 'linked', text: 'Linked To', value: 'linked' },
+  { key: 'page_links', text: 'Linked From', value: 'page_links' }
 ];
 
 const language = [
@@ -62,20 +63,28 @@ class AdvancedSettings extends React.Component {
           </Form.Group>
 
           <Form.Group widths="equal">
-            <Form.Select
-              fluid
-              label="Filter By"
-              options={filter}
-              onChange={this.props.handleFilterSettingsChange}
-              placeholder="Popularity"
-            />
-            <Form.Input
-              fluid
-              label="Limit"
-              type="number"
-              onChange={this.props.handleLimitSettingsChange}
-              placeholder="10"
-            />
+          <Form.Select
+            fluid
+            label={<label> Filter By <Popup
+              trigger={<Icon name='info circle small' />}
+              content={this.props.more_info}
+              basic
+            /></label>}
+            options={filter}
+            onChange={this.props.handleFilterSettingsChange}
+            placeholder="Popularity"
+          />
+          <Form.Input
+            fluid
+            label={<label> Size <Popup
+              trigger={<Icon name='info circle small' />}
+              content="Number of links generated."
+              basic
+            /></label>}
+            type="number"
+            onChange={this.props.handleLimitSettingsChange}
+            placeholder="10"
+          />
           </Form.Group>
         </Form>
       </div>

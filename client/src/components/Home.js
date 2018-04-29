@@ -2,7 +2,7 @@ import React from 'react';
 import SearchBar from './SearchBar';
 import AdvancedSettings from './AdvancedSettings';
 import LinkList from './List';
-import { Button } from 'semantic-ui-react';
+import { Button, Checkbox } from 'semantic-ui-react';
 import axios from 'axios';
 import { Image, List } from 'semantic-ui-react';
 import wiki_logo from '../wiki_logo.png';
@@ -13,14 +13,15 @@ class Home extends React.Component {
     categories: [],
     loading: false,
     links: [],
-    method: 'articles',
+    method: 'individual',
     language: 'en',
     filter: 'popularity',
-    limit: 10
+    limit: 10,
+    checked: [],
+    more_info: 'Filters by popularity score.'
   };
 
   renderResults = () => {
-    console.log(this.state.links);
     this.state.links.map(link => {
       return (
         <List.Item>
@@ -29,15 +30,25 @@ class Home extends React.Component {
             <List.Header>Hi</List.Header>
           </List.Content>
         </List.Item>
-        // <List.Item>
-        //   <Image avatar src={wiki_logo} />
-        //   <List.Content>
-        //     <List.Header>link</List.Header>
-        //   </List.Content>
-        // </List.Item>
       );
     });
   };
+  
+  handleCheck = (id) => {
+    var checked = this.state.checked;
+    checked[id] = !checked[id];
+    this.setState({ checked: checked});
+  }
+    
+    
+  handleCheckAll = () => {
+    var checks = [];
+    for (var i =0; i<this.state.links.length; i++) {
+      checks.push(true);
+    }
+    this.setState({ checked: checks });
+  };
+    
 
   handleResultSelect = (e, { result }) =>
     this.setState({ value: result.title });
@@ -53,8 +64,16 @@ class Home extends React.Component {
   handleLanguageSettingsChange = (e, { value }) =>
     this.setState({ language: value });
 
-  handleFilterSettingsChange = (e, { value }) =>
+  handleFilterSettingsChange = (e, { value }) => {
+    if (value === "ores_quality") {
+      this.setState({more_info: "Filters by ORES assessment score"});
+    } else if (value === "popularity") {
+      this.setState({more_info: "Filters by popularity score"});
+    } else if (value === "most_linked_to") {
+      this.setState({more_info: "Related articles on the same page"});
+    }
     this.setState({ filter: value });
+  }
 
   handleLimitSettingsChange = (e, { value }) => this.setState({ limit: value });
 
@@ -62,21 +81,36 @@ class Home extends React.Component {
     setTimeout(() => {
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:5000/',
+        url: 'http://zimmerbot.host/',
         data: {
           method: this.state.method,
           query: this.state.value,
           language: this.state.language,
           filter: this.state.filter,
-          limit: this.state.limit,
+          limit: parseInt(this.state.limit),
           stub: 'include'
         }
       }).then(response => {
         const links = response.data;
+        console.log(links);
         if (links) {
-          links.map(links => {
-            this.state.links.push(links);
-          });
+          if (
+            links[0] === 'No search results found for this query' &&
+            this.state.method === 'category'
+          ) {
+            alert("Category '" + this.state.value + "' not found.");
+          } else {
+            links.map(links => {
+              this.state.links.push(links);
+            });
+            
+            // Sets state for checkboxes
+            var checks = [];
+            for (var i =0; i<this.state.links.length; i++) {
+              checks.push(false);
+            }
+            this.setState({ checked: checks });
+          }
         }
         this.setState({ links: this.state.links });
       });
@@ -84,12 +118,12 @@ class Home extends React.Component {
   }
 
   autocomplete(event) {
-    if (this.state.method == 'category') {
+    if (this.state.method === 'category') {
       this.setState({ categories: [], loading: true });
       setTimeout(() => {
         axios({
           method: 'post',
-          url: 'http://127.0.0.1:5000/category-autocomplete',
+          url: 'http://zimmerbot.host/category-autocomplete',
           data: {
             language: 'en',
             prefix: this.state.value
@@ -142,12 +176,28 @@ class Home extends React.Component {
             handleLimitSettingsChange={this.handleLimitSettingsChange.bind(
               this
             )}
+            more_info={this.state.more_info}
           />
         </div>
         <div className="link-container">
-          <List selection verticalAlign="middle">
-            {this.renderResults()}
-          </List>
+          <div className="ui toggle button" onClick={this.handleCheckAll.bind(this)}>Select All</div>
+        </div>
+        
+        <div className="link-container">
+          <div className="ui raised segments">
+            {this.state.links.map(function(listValue, id) {
+              return (
+                <div className="ui segment">
+                  <div className="ui checkbox">
+                    <Checkbox name="select" checked={this.state.checked[id]} onChange={this.handleCheck.bind(this, id)}/>
+                  </div>
+                  <a href={listValue}>
+                    {listValue}
+                  </a>
+                </div>
+              );
+            }, this)}
+          </div>
         </div>
       </div>
     );

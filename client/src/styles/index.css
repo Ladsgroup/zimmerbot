@@ -42,41 +42,35 @@ body {
 }
 
 .link-container {
+  display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 3%;
 }
 
-.links {
-
-  border-radius: 10px;
-  padding: 0;
-  margin: auto;
-  width: 70%;
-  list-style-type: none;
-  background-color: #bfbfbf;
+.link-container a {
+  padding-left: 1em;
 }
 
-.links li{
+.links li {
   border-radius: 5px;
   text-decoration: none;
   color: #000;
   display: block;
   width: 200px;
- 
+  width: 300px;
+
   -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
   -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
   -o-transition: font-size 0.3s ease, background-color 0.3s ease;
   -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
-  transition: font-size 0.3s ease, background-color 0.3s ease
+  transition: font-size 0.3s ease, background-color 0.3s ease;
 }
 
 .links li:hover {
   font-size: 20px;
-  background: #BFBFBF;
+  background: #bfbfbf;
 }
-
-/*.links li {
-  padding: 0.5em;
-}*/
 
 /* Mobile Styling */
 
