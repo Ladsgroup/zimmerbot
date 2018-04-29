@@ -18,6 +18,7 @@ base_category_query_url = "w/api.php?action=query&clshow=!hidden&format=json&pro
 #NOTE: currently capped at 20 related members max
 base_related_query_url ="w/api.php?action=query&list=categorymembers&format=json&cmsort=timestamp&cmdir=desc&cmprop=type|title|timestamp&cmlimit=10&cmtitle="
 
+base_link_query_url = "w/api.php?action=query&prop=links&format=json&pllimit="
 #Create languages dictionary from "list_of_wiki_languages.txt"
 # def generate_language_dict():
 #     with open("list_of_wiki_languages.txt", "r") as file:
@@ -32,6 +33,26 @@ base_related_query_url ="w/api.php?action=query&list=categorymembers&format=json
 ###############
 #MAIN FUNCTION#
 ###############
+
+def query_article_links(search_item, language_code, limit):
+
+    base_link_query_url2 = base_link_query_url + str(limit) + "&titles="
+
+    data = get_data_related_articles(search_item, language_code, base_link_query_url2)
+
+    links = []
+    for e in data["query"]["pages"]:
+
+        for link in data["query"]["pages"][e]["links"]:
+
+            links += [link]
+
+    if not links:
+        print("Please try another search query.")
+        if suggestion_exists(data):
+            print("Suggestion: " + get_search_suggestion(search_item, language_code))
+
+    return links
 
 #Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM
 #The dictionaries contain the article's TITLE, PAGEID, WORDCOUNT, and SNIPPET

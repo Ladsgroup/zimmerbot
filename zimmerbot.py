@@ -9,12 +9,14 @@ import sys
 def main(method, query, language_code, filter_method, limit, stub="include"):
     # Process script arguments
     # For now, we only support limiting by number of articles, not total package size
-    
+
     # limit = max(min(int(limit), 500), 1)
 
     # article_dictionaries is a list of dictionaries
     if method == "individual":
         article_dictionaries = query_articles(query, language_code)[:limit+20]
+    elif method == "page_links":
+        article_dictionaries = query_article_links(query, language_code, limit)
     elif method == "category":
         article_dictionaries = get_articles_in_category(query, language_code, limit)[:limit+20]
     elif method == "related":
@@ -82,4 +84,3 @@ if __name__ == "__main__":
     lst = main("linked", "polling trends", "en", "ores_quality", 10, "exclude")
     print("----", lst)
     print("LENGTH: ", len(lst))
-    
