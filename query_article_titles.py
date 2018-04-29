@@ -34,24 +34,18 @@ base_link_query_url = "w/api.php?action=query&prop=links&format=json&pllimit="
 #MAIN FUNCTION#
 ###############
 
+#Returns a list of article names (strings) that are links on the search_item page
 def query_article_links(search_item, language_code, limit):
-
     base_link_query_url2 = base_link_query_url + str(limit) + "&titles="
-
     data = get_data_related_articles(search_item, language_code, base_link_query_url2)
-
     links = []
     for e in data["query"]["pages"]:
-
         for link in data["query"]["pages"][e]["links"]:
-
             links += [link]
-
     if not links:
         print("Please try another search query.")
         if suggestion_exists(data):
             print("Suggestion: " + get_search_suggestion(search_item, language_code))
-
     return links
 
 #Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM
