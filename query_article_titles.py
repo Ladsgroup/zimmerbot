@@ -45,7 +45,7 @@ def query_article_links(search_item, language_code, limit):
         for link in data["query"]["pages"][e]["links"]:
             links += [link]
     if not links:
-        print("Please try another search query.")
+        print("No links were found for this page. Please try another search query.")
     return links
 
 #Returns a list of dictionaries of LANGUAGE articles from a search query SEARCH_ITEM
