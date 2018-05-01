@@ -179,9 +179,12 @@ class Home extends React.Component {
             more_info={this.state.more_info}
           />
         </div>
-        <div className="link-container">
-          <div className="ui toggle button" onClick={this.handleCheckAll.bind(this)}>Select All</div>
-        </div>
+        {this.state.links.length > 0 ? (
+          <div className="link-container">
+            <div className="ui toggle button" onClick={this.handleCheckAll.bind(this)}>Select All</div>
+          </div>
+        ) : (<div></div>)}
+        
         
         <div className="link-container">
           <div className="ui raised segments">

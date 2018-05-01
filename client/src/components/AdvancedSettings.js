@@ -76,7 +76,7 @@ class AdvancedSettings extends React.Component {
           />
           <Form.Input
             fluid
-            label={<label> Size <Popup
+            label={<label> Limit <Popup
               trigger={<Icon name='info circle small' />}
               content="Number of links generated."
               basic
