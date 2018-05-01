@@ -1,3 +1,4 @@
+<option value="en">English</option>
 <option value="ab">Abkhazian</option>
 <option value="ace">Acehnese</option>
 <option value="ady">Adyghe</option>
@@ -69,7 +70,6 @@
 <option value="pa">Eastern Punjabi</option>
 <option value="arz">Egyptian Arabic</option>
 <option value="eml">Emilian-Romagnol</option>
-<option value="en">English</option>
 <option value="myv">Erzya</option>
 <option value="eo">Esperanto</option>
 <option value="et">Estonian</option>
