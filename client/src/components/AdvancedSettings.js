@@ -8,7 +8,7 @@ const search = [
   { key: 'category', text: 'Category', value: 'category' },
   { key: 'related', text: 'Related Articles', value: 'related' },
   { key: 'linked', text: 'Linked To', value: 'linked' },
-  { key: 'page_links', text: 'Linked From', value: 'page_links' }
+  // { key: 'page_links', text: 'Linked From', value: 'page_links' }
 ];
 
 const language = [
